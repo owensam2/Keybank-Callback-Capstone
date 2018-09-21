@@ -13,8 +13,8 @@ public class CallbackQuestionsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_callback_questions);
 
-        Button buttonQuestionFradulent = findViewById(R.id.buttonQuestionFradulent);
-        buttonQuestionFradulent.setOnClickListener(new View.OnClickListener() {
+        Button buttonQuestionFraudulent = findViewById(R.id.ButtonQuestionFraudulent);
+        buttonQuestionFraudulent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent initiateConnectionIntent = new Intent(getApplicationContext(), CallbackActivity.class);
