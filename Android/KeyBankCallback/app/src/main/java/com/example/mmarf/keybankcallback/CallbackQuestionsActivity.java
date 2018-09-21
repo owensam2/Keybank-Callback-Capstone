@@ -12,7 +12,9 @@ public class CallbackQuestionsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_callback_questions);
-
+        AddButtonQuestionFraudulent_Handlers();
+    }
+    private  void AddButtonQuestionFraudulent_Handlers(){
         Button buttonQuestionFraudulent = findViewById(R.id.ButtonQuestionFraudulent);
         buttonQuestionFraudulent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -22,6 +24,5 @@ public class CallbackQuestionsActivity extends AppCompatActivity {
                 startActivity(initiateConnectionIntent);
             }
         });
-
     }
 }
