@@ -16,7 +16,7 @@ public class CallbackActivity extends AppCompatActivity {
         buttonInitiateConnection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //Test of GIT Hub pushing
             }
         });
     }
