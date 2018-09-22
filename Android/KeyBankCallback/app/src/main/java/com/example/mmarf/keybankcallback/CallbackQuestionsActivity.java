@@ -33,7 +33,7 @@ public class CallbackQuestionsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent callbackActivity = new Intent(getApplicationContext(), CallbackActivity.class);
-                callbackActivity.putExtra("KeyBank.CallbackActivity.ITEM_INDEX", ListOfDepartments[position]);
+                callbackActivity.putExtra("KeyBank.CallbackActivity.ITEM_INDEX", position);
                 startActivity(callbackActivity);
                 //See 39:12 on the video for continuation.
             }
