@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">KeyBank.Callback</string>
+
+    <string-array name="ListOfQuestions">
+        <item>Fraudulent Activity Help</item>
+        <item>Account Balance Help</item>
+        <item>Loan Help</item>
+        <item>Investment Help</item>
+    </string-array>
+
+    <string-array name="ListOfDepartments">
+        <item>Contact Fraudulent Team</item>
+        <item>Contact Customer Service</item>
+        <item>Contact Loan Department</item>
+        <item>Contact Investment Services</item>
+    </string-array>
 </resources>

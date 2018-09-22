@@ -7,6 +7,13 @@ import android.widget.Button;
 
 public class CallbackActivity extends AppCompatActivity {
 
+    String mDepartment;
+
+    void CallbackActivity(String department){
+        //TODO route to the appropriate department
+        this.mDepartment = department;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
