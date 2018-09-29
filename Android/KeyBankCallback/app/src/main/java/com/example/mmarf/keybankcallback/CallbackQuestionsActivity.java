@@ -35,7 +35,6 @@ public class CallbackQuestionsActivity extends AppCompatActivity {
                 Intent callbackActivity = new Intent(getApplicationContext(), CallbackActivity.class);
                 callbackActivity.putExtra("KeyBank.CallbackActivity.ITEM_INDEX", position);
                 startActivity(callbackActivity);
-                //See 39:12 on the video for continuation.
             }
         });
     }

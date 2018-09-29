@@ -9,24 +9,25 @@ import android.widget.TextView;
 
 public class CallbackQuestionsItemAdapter extends BaseAdapter {
 
+    final String mContactPrefix = "Contact ";
     LayoutInflater mInflater;
-    String[] ListOfQuestions;
-    String[] ListOfDepartments;
+    String[] mListOfQuestions;
+    String[] mListOfDepartments;
 
     public CallbackQuestionsItemAdapter(Context c, String[] listOfQuestions, String[] listOfDepartments){
-        this.ListOfDepartments = listOfDepartments;
-        this.ListOfQuestions = listOfQuestions;
+        this.mListOfDepartments = listOfDepartments;
+        this.mListOfQuestions = listOfQuestions;
         mInflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public int getCount() {
-        return ListOfDepartments.length;
+        return mListOfDepartments.length;
     }
 
     @Override
     public Object getItem(int position) {
-        return ListOfQuestions[position];
+        return mListOfQuestions[position];
     }
 
     @Override
@@ -40,11 +41,11 @@ public class CallbackQuestionsItemAdapter extends BaseAdapter {
         TextView questionTextView = view.findViewById(R.id.QuestionTextView);
         TextView departmentTextView = view.findViewById(R.id.DepartmentTextView);
 
-        String question = this.ListOfQuestions[position];
-        String department = this.ListOfDepartments[position];
+        String question = this.mListOfQuestions[position];
+        String department = this.mListOfDepartments[position];
 
         questionTextView.setText(question);
-        departmentTextView.setText(department);
+        departmentTextView.setText(mContactPrefix + department);
 
         return view;
     }

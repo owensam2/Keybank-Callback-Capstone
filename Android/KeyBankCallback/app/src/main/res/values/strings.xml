@@ -9,10 +9,10 @@
     </string-array>
 
     <string-array name="ListOfDepartments">
-        <item>Contact Fraudulent Team</item>
-        <item>Contact Customer Service</item>
-        <item>Contact Loan Department</item>
-        <item>Contact Investment Services</item>
+        <item>Fraudulent Team</item>
+        <item>Customer Service</item>
+        <item>Loan Department</item>
+        <item>Investment Services</item>
     </string-array>
     <string name="title_activity_callback_schedule">CallbackScheduleActivity</string>
 </resources>
