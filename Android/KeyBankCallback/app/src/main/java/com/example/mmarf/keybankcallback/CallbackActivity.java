@@ -5,11 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class CallbackActivity extends AppCompatActivity {
 
     String mDepartment;
-    Button ButtonInitiateConnection;
+    Button ButtonRequestCallback;
 
     //void CallbackActivity(String department){
     //     this.mDepartment = department;
@@ -19,23 +20,31 @@ public class CallbackActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_callback);
-        this.ButtonInitiateConnection = findViewById(R.id.buttonInitiateConnection);
+        this.ButtonRequestCallback = findViewById(R.id.buttonRequestCallback);
 
         Intent intent = getIntent();
         int index = intent.getIntExtra("KeyBank.CallbackActivity.ITEM_INDEX", -1);
-        SetupConnection(index);
+        String[] listOfDepartments = getResources().getStringArray(R.array.ListOfDepartments);
+        mDepartment = listOfDepartments[index];
 
-        this.ButtonInitiateConnection.setOnClickListener(new View.OnClickListener() {
+        SetupConnection(mDepartment);
+
+        this.ButtonRequestCallback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Test of GIT Hub pushing
+                TransferToConformationActivity(mDepartment);
             }
         });
     }
-    void SetupConnection(int departmentIndex){
+    void SetupConnection(String department){
         //Get the desired department
-        String[] listOfDepartments = getResources().getStringArray(R.array.ListOfDepartments);
-        this.ButtonInitiateConnection.setText("Connect to " + listOfDepartments[departmentIndex]);
+        TextView textViewDepartment = findViewById(R.id.textViewDepartment);
+        textViewDepartment.setText("Department: " + department);
+        //TODO Find the minutes estimated by the department sent in.
     }
-
+    void TransferToConformationActivity(String department){
+        Intent callbackScheduleActivity = new Intent(getApplicationContext(), CallbackScheduleActivity.class);
+        callbackScheduleActivity.putExtra("KeyBank.CallbackConformationActivity.DEPARTMENT", department);
+        startActivity(callbackScheduleActivity);
+    }
 }

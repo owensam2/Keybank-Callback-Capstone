@@ -7,6 +7,37 @@
     tools:context=".CallbackConformationActivity">
 
     <TextView
+        android:id="@+id/textViewWaitTimeTop2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:text="Estimated wait time:"
+        app:layout_constraintBottom_toTopOf="@+id/textViewWaitMinutes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCallbackConfirmed" />
+
+    <TextView
+        android:id="@+id/textViewWaitMinutes2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="100 Minutes"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewWaitTimeTop2" />
+
+    <TextView
         android:id="@+id/textViewCallbackConfirmed"
         android:layout_width="358dp"
         android:layout_height="49dp"
@@ -32,6 +63,8 @@
         android:layout_marginTop="8dp"
         android:text="Main Page"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewCallbackConfirmed" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewWaitMinutes2" />
+
 </android.support.constraint.ConstraintLayout>
