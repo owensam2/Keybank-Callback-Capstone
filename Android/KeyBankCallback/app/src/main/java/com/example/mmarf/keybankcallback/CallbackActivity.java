@@ -10,17 +10,15 @@ import android.widget.TextView;
 public class CallbackActivity extends AppCompatActivity {
 
     String mDepartment;
-    Button ButtonRequestCallback;
-
-    //void CallbackActivity(String department){
-    //     this.mDepartment = department;
-    //}
+    Button mButtonRequestCallback;
+    Button mButtonScheduleCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_callback);
-        this.ButtonRequestCallback = findViewById(R.id.buttonRequestCallback);
+        this.mButtonRequestCallback = findViewById(R.id.buttonRequestCallback);
+        this.mButtonScheduleCallback = findViewById(R.id.buttonScheduleCallaback);
 
         Intent intent = getIntent();
         int index = intent.getIntExtra("KeyBank.CallbackActivity.ITEM_INDEX", -1);
@@ -29,21 +27,28 @@ public class CallbackActivity extends AppCompatActivity {
 
         SetupConnection(mDepartment);
 
-        this.ButtonRequestCallback.setOnClickListener(new View.OnClickListener() {
+        this.mButtonRequestCallback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TransferToConformationActivity(mDepartment);
+                TransferToConformationActivity(mDepartment, CallbackConformationActivity.class);
             }
         });
+        this.mButtonScheduleCallback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TransferToConformationActivity(mDepartment, CallbackScheduleActivity.class);
+            }
+        });
+
     }
     void SetupConnection(String department){
         //Get the desired department
         TextView textViewDepartment = findViewById(R.id.textViewDepartment);
-        textViewDepartment.setText("Department: " + department);
+        textViewDepartment.setText(department);
         //TODO Find the minutes estimated by the department sent in.
     }
-    void TransferToConformationActivity(String department){
-        Intent callbackScheduleActivity = new Intent(getApplicationContext(), CallbackScheduleActivity.class);
+    void TransferToConformationActivity(String department, Class<?> cls){
+        Intent callbackScheduleActivity = new Intent(getApplicationContext(), cls);
         callbackScheduleActivity.putExtra("KeyBank.CallbackConformationActivity.DEPARTMENT", department);
         startActivity(callbackScheduleActivity);
     }
