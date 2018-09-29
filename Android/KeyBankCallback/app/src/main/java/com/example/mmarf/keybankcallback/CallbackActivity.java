@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 public class CallbackActivity extends AppCompatActivity {
 
+    final String mMinutesText = " Minutes";
+    final String mCalculating = "Calculating...";
     String mDepartment;
     Button mButtonRequestCallback;
     Button mButtonScheduleCallback;
@@ -45,11 +47,18 @@ public class CallbackActivity extends AppCompatActivity {
         //Get the desired department
         TextView textViewDepartment = findViewById(R.id.textViewDepartment);
         textViewDepartment.setText(department);
+        TextView textViewWaitMinutes =  findViewById(R.id.textViewWaitMinutes);
+        textViewWaitMinutes.setText(mCalculating);
         //TODO Find the minutes estimated by the department sent in.
+        textViewWaitMinutes.setText(String.valueOf(EstimatedMinutesOffLine()) + mMinutesText);
     }
     void TransferToConformationActivity(String department, Class<?> cls){
         Intent callbackScheduleActivity = new Intent(getApplicationContext(), cls);
         callbackScheduleActivity.putExtra("KeyBank.CallbackConformationActivity.DEPARTMENT", department);
         startActivity(callbackScheduleActivity);
+    }
+
+    final int EstimatedMinutesOffLine(){
+        return 20;
     }
 }
