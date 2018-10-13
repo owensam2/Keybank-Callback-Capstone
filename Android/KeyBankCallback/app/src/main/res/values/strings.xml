@@ -23,4 +23,9 @@
     <string name="call_immidately">Call Immidately</string>
     <string name="call_immdidately_and_wait_on_hold">Call Immdidately and wait on hold</string>
     <string name="call_immediately_and_wait_on_hold">Call Immediately and wait on hold</string>
+    <string name="estimated_wait_time">Estimated wait time:</string>
+    <string name="_100">100</string>
+    <string name="callback_has_been_scheduled">Callback has been Scheduled</string>
+    <string name="main_page">Main Page</string>
+    <string name="minutes">Minutes</string>
 </resources>

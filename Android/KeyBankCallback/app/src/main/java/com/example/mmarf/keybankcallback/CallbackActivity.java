@@ -22,13 +22,11 @@ public class CallbackActivity extends AppCompatActivity {
     Button mButtonRequestCallback;
     Button mButtonScheduleCallback;
     Button mButtonCallImmediately;
-    CallbackServerMediator callbackServerMediator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_callback);
-        this.callbackServerMediator = new CallbackServerMediator("CallbackServer");
         this.mButtonRequestCallback = findViewById(R.id.buttonRequestCallback);
         this.mButtonScheduleCallback = findViewById(R.id.buttonScheduleCallaback);
         this.mButtonCallImmediately = findViewById(R.id.buttonCallImmidately);
@@ -57,7 +55,7 @@ public class CallbackActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent numberToCall = new Intent(Intent.ACTION_CALL);
                 //TODO: Update this to the actual phone number
-                numberToCall.setData(Uri.parse("tel:" + String.valueOf(GetCallbackServerMediator().GetEstimatedTimeRemaining("Fraud"))));
+                numberToCall.setData(Uri.parse("tel:" + String.valueOf(CallbackQuestionsActivity.GetCallbackServerMediator().GetPhoneNumberForDepartment("Fraud"))));
                 if (ActivityCompat.checkSelfPermission(CallbackActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                     AlertDialog.Builder builder;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -90,10 +88,6 @@ public class CallbackActivity extends AppCompatActivity {
         });
     }
 
-    CallbackServerMediator GetCallbackServerMediator(){
-        return callbackServerMediator;
-    }
-
     void SetupConnection(String department){
         //Get the desired department
         TextView textViewDepartment = findViewById(R.id.textViewDepartment);
@@ -101,12 +95,11 @@ public class CallbackActivity extends AppCompatActivity {
         TextView textViewWaitMinutes =  findViewById(R.id.textViewWaitMinutes);
         textViewWaitMinutes.setText(mCalculating);
         //TODO Find the minutes estimated by the department sent in.
-        textViewWaitMinutes.setText(String.valueOf(GetCallbackServerMediator().GetEstimatedTimeRemaining("Fraud")) + mMinutesText);
+        textViewWaitMinutes.setText(String.valueOf(CallbackQuestionsActivity.GetCallbackServerMediator().GetEstimatedTimeRemaining(department)) + mMinutesText);
     }
     void TransferToConformationActivity(String department, Class<?> cls){
         Intent callbackScheduleActivity = new Intent(getApplicationContext(), cls);
         callbackScheduleActivity.putExtra("KeyBank.CallbackConformationActivity.DEPARTMENT", department);
         startActivity(callbackScheduleActivity);
     }
-
 }

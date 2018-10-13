@@ -24,7 +24,7 @@ public class CallbackServerMediator {
     }
 
     private int GetOfflineTime(){
-        return 20;
+        return 10;
     }
     private String GetOfflinePhoneNumber(){
         return "8005392968";
