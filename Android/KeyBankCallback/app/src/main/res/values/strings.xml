@@ -15,4 +15,12 @@
         <item>Investment Services</item>
     </string-array>
     <string name="title_activity_callback_schedule">CallbackScheduleActivity</string>
+    <string name="request_callaback">Request Callaback</string>
+    <string name="estimated_wait_time">Estimated wait time:</string>
+    <string name="_100_minutes">100 Minutes</string>
+    <string name="schedule_callback">Schedule Callback</string>
+    <string name="department">Department</string>
+    <string name="call_immidately">Call Immidately</string>
+    <string name="call_immdidately_and_wait_on_hold">Call Immdidately and wait on hold</string>
+    <string name="call_immediately_and_wait_on_hold">Call Immediately and wait on hold</string>
 </resources>

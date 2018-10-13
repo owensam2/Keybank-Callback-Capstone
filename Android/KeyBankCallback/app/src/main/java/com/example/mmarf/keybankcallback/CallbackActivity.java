@@ -1,6 +1,13 @@
 package com.example.mmarf.keybankcallback;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +21,7 @@ public class CallbackActivity extends AppCompatActivity {
     String mDepartment;
     Button mButtonRequestCallback;
     Button mButtonScheduleCallback;
+    Button mButtonCallImmediately;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +29,7 @@ public class CallbackActivity extends AppCompatActivity {
         setContentView(R.layout.activity_callback);
         this.mButtonRequestCallback = findViewById(R.id.buttonRequestCallback);
         this.mButtonScheduleCallback = findViewById(R.id.buttonScheduleCallaback);
+        this.mButtonCallImmediately = findViewById(R.id.buttonCallImmidately);
 
         Intent intent = getIntent();
         int index = intent.getIntExtra("KeyBank.CallbackActivity.ITEM_INDEX", -1);
@@ -41,7 +50,46 @@ public class CallbackActivity extends AppCompatActivity {
                 TransferToConformationActivity(mDepartment, CallbackScheduleActivity.class);
             }
         });
+        this.mButtonCallImmediately.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent numberToCall = new Intent(Intent.ACTION_CALL);
+                numberToCall.setData(Uri.parse("tel:" + String.valueOf(NumberToCallOffLine())));
+                if (ActivityCompat.checkSelfPermission(CallbackActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    AlertDialog.Builder builder;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        builder = new AlertDialog.Builder(CallbackActivity.this, android.R.style.Theme_Material_Dialog_Alert);
+                    } else {
+                        builder = new AlertDialog.Builder(CallbackActivity.this);
+                    }
+                    builder.setTitle("Call out not supported")
+                    .setMessage("Go to app settings and allow access to the phone.")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with delete
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
 
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+
+                    return;
+                }
+                startActivity(numberToCall);
+            }
+        });
     }
     void SetupConnection(String department){
         //Get the desired department
@@ -61,4 +109,9 @@ public class CallbackActivity extends AppCompatActivity {
     final int EstimatedMinutesOffLine(){
         return 20;
     }
+
+    final String NumberToCallOffLine(){
+        return "8005392968";
+    }
+
 }
