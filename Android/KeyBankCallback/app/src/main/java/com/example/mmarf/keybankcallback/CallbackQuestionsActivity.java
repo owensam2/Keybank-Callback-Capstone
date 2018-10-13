@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Switch;
 
 public class CallbackQuestionsActivity extends AppCompatActivity {
 
@@ -32,11 +33,25 @@ public class CallbackQuestionsActivity extends AppCompatActivity {
         CallbackQuestionsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent callbackActivity = new Intent(getApplicationContext(), CallbackActivity.class);
-                callbackActivity.putExtra("KeyBank.CallbackActivity.ITEM_INDEX", position);
-                startActivity(callbackActivity);
+                //Find out if there is a wait or not. This will determine which screen is chosen next.
+                if(GetHoldTimeInDepartment("Fraud") > 0){
+                    Intent callbackActivity = new Intent(getApplicationContext(), CallbackActivity.class);
+                    callbackActivity.putExtra("KeyBank.CallbackActivity.ITEM_INDEX", position);
+                    startActivity(callbackActivity);
+                }else{
+
+                }
             }
         });
+    }
+
+    int GetHoldTimeInDepartment(String departmentName){
+        //TODO: Contact server for time
+        return GetOfflineTime();
+    }
+
+    int GetOfflineTime(){
+        return 20;
     }
 
 }
