@@ -42,4 +42,9 @@
     <string name="main_page">Main Page</string>
     <string name="There_is_currently_no_wait">There is currently no wait</string>
     <string name="minutes">Minutes</string>
+    <string name="one_hour_from_now">One hour from now</string>
+    <string name="tomorrow_at_8_30_am">Tomorrow at 8:30 AM</string>
+    <string name="today_at_4_30_pm">Today at 4:30 PM</string>
+    <string name="schedule_callback">Schedule Callback</string>
+    <string name="custom">Custom</string>
 </resources>
