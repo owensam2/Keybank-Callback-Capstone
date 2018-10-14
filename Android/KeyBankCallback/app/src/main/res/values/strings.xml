@@ -14,6 +14,21 @@
         <item>Loan Department</item>
         <item>Investment Services</item>
     </string-array>
+
+    <string-array name="ListOfWeekdayHours">
+        <item>8-5</item>
+        <item>8-5</item>
+        <item>8-5</item>
+        <item>8-5</item>
+    </string-array>
+
+    <string-array name="ListOfSaturdayHours">
+        <item>8-1</item>
+        <item>8-1</item>
+        <item>0</item>
+        <item>0</item>
+    </string-array>
+
     <string name="title_activity_callback_schedule">CallbackScheduleActivity</string>
     <string name="request_callback">Request Callback</string>
     <string name="estimated_wait_time">Estimated wait time:</string>
