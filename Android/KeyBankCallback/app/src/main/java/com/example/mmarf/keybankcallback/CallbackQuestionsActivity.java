@@ -35,13 +35,16 @@ public class CallbackQuestionsActivity extends AppCompatActivity {
         CallbackQuestionsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 //Find out if there is a wait or not. This will determine which screen is chosen next.
-                if(GetCallbackServerMediator().GetEstimatedTimeRemaining("Fraud") > 0){
+                if(GetCallbackServerMediator().GetEstimatedTimeRemaining(CallbackHelper.GetDepartmentName(position, CallbackQuestionsActivity.this)) > 0){
                     Intent callbackActivity = new Intent(getApplicationContext(), CallbackActivity.class);
                     callbackActivity.putExtra("KeyBank.CallbackActivity.ITEM_INDEX", position);
                     startActivity(callbackActivity);
                 }else{
-
+                    Intent callbackActivity = new Intent(getApplicationContext(), CallbackActivityNoWait.class);
+                    callbackActivity.putExtra("KeyBank.CallbackActivity.ITEM_INDEX", position);
+                    startActivity(callbackActivity);
                 }
             }
         });

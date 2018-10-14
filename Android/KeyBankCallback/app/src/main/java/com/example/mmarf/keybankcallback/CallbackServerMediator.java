@@ -15,7 +15,7 @@ public class CallbackServerMediator {
 
     public int GetEstimatedTimeRemaining(String department){
         //TODO Get time
-        return GetOfflineTime();
+        return GetOfflineTime(department);
     }
 
     public String GetPhoneNumberForDepartment(String department){
@@ -23,8 +23,11 @@ public class CallbackServerMediator {
         return  GetOfflinePhoneNumber();
     }
 
-    private int GetOfflineTime(){
-        return 10;
+    private int GetOfflineTime(String department){
+        if(department.contentEquals("Fraudulent Team"))
+            return 0;
+        else
+            return 10;
     }
     private String GetOfflinePhoneNumber(){
         return "8005392968";
