@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
@@ -87,5 +88,75 @@ public class CallbackHelper {
 
     public static String GetLocalTimeZone(){
         return "EST";
+    }
+
+    public static String FormatSuggestedTimeString(String day, int hour, int minute){
+        String amPm = "AM";
+        if(hour > 12){
+            hour = hour - 12;
+            amPm = "PM";
+        }
+        String minuteString;
+        minuteString = String.format("%02d", minute);
+
+        return String.format(day + " at " + String.valueOf(hour) + ":" + minuteString + " " + amPm);
+    }
+
+    public static Calendar GetSuggestedCalendar(Context context, int suggestedIndex){
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
+
+        Date date = new Date();
+        date.setHours(GetSuggestedHour(context, suggestedIndex));
+        date.setMinutes(GetSuggestedMinute(context, suggestedIndex));
+        date.setSeconds(0);
+        cal.setTime(date);
+        return cal;
+    }
+
+    public static int GetSuggestedHour(Context context, int suggestedIndex){
+        int returnItem;
+        Resources resources = context.getResources();
+
+        switch (suggestedIndex){
+            case 1: returnItem =  resources.getInteger(R.integer.FirstSuggestedTimeHour);
+                break;
+            case 2: returnItem =  resources.getInteger(R.integer.SecondSuggestedTimeHour);
+                break;
+            case 3: returnItem =  resources.getInteger(R.integer.ThirdSuggestedTimeHour);
+                break;
+            default: returnItem = -1;
+                break;
+        }
+        return returnItem;
+    }
+    public static int GetSuggestedMinute(Context context, int suggestedIndex){
+        int returnItem;
+        Resources resources = context.getResources();
+
+        switch (suggestedIndex){
+            case 1: returnItem =  resources.getInteger(R.integer.FirstSuggestedTimeMinute);
+                break;
+            case 2: returnItem =  resources.getInteger(R.integer.SecondSuggestedTimeMinute);
+                break;
+            case 3: returnItem =  resources.getInteger(R.integer.ThirdSuggestedTimeMinute);
+                break;
+            default: returnItem = -1;
+                break;
+        }
+        return returnItem;
+    }
+
+    public static String GetSuggestedTimeString(Context context, int suggestedIndex, boolean isToday) {
+        String availableDay;
+        Resources resources = context.getResources();
+
+        //TODO: Get something that may not be tomorrow.
+        if(isToday)
+            availableDay = resources.getString(R.string.today);
+        else
+            availableDay = resources.getString(R.string.tomorrow);
+        return FormatSuggestedTimeString(availableDay,
+                GetSuggestedHour(context, suggestedIndex),
+                GetSuggestedMinute(context, suggestedIndex));
     }
 }
