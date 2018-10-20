@@ -24,7 +24,8 @@
             android:name=".CallbackScheduleActivity"
             android:label="@string/title_activity_callback_schedule" />
         <activity android:name=".CallbackActivityNoWait" />
-        <activity android:name=".CallbackSuggestionScheduler"></activity>
+        <activity android:name=".CallbackSuggestionScheduler" />
+        <activity android:name=".CallbackConformationTimeActivity"></activity>
     </application>
 
 </manifest>

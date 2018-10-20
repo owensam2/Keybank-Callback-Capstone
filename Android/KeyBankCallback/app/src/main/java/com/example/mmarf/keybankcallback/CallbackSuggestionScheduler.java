@@ -1,5 +1,6 @@
 package com.example.mmarf.keybankcallback;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,26 +15,30 @@ public class CallbackSuggestionScheduler extends AppCompatActivity {
     Button mButtonTimeRank2;
     Button mButtonTimeRank3;
     Button mButtonTimeRankCustom;
-    Resources mResources;
+    public static Resources mResources;
     int[] mButtonOrder = new int[3];
+    String mDepartment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_callback_suggestion_scheduler);
+        Intent intent = getIntent();
+        mDepartment = intent.getStringExtra("KeyBank.CallbackConformationActivity.DEPARTMENT");
 
         this.mButtonTimeRank1 = findViewById(R.id.buttonTimeRank1);
         this.mButtonTimeRank2 = findViewById(R.id.buttonTimeRank2);
         this.mButtonTimeRank3 = findViewById(R.id.buttonTimeRank3);
         this.mButtonTimeRankCustom = findViewById(R.id.buttonCustomSchedule);
-        mResources = getResources();
+
 
         //Find what time it is and populate the button text with the appropriate times
         SetupButtonText();
         this.mButtonTimeRank1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                CallbackQuestionsActivity.GetCallbackServerMediator().SetCallbackTime(GetSuggestedCalendar(mButtonOrder[0]).getTime(), mDepartment);
+                
             }
         });
         this.mButtonTimeRank2.setOnClickListener(new View.OnClickListener() {
@@ -93,7 +98,7 @@ public class CallbackSuggestionScheduler extends AppCompatActivity {
         }
     }
 
-    Calendar GetSuggestedCalendar(int suggestedIndex){
+    public static Calendar GetSuggestedCalendar(int suggestedIndex){
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
 
         Date date = new Date();
@@ -128,7 +133,7 @@ public class CallbackSuggestionScheduler extends AppCompatActivity {
         return String.format(day + " at " + String.valueOf(hour) + ":" + minuteString + " " + amPm);
     }
 
-    int GetSuggestedHour(int suggestedIndex){
+    public static int GetSuggestedHour(int suggestedIndex){
         int returnItem;
         switch (suggestedIndex){
             case 1: returnItem =  mResources.getInteger(R.integer.FirstSuggestedTimeHour);
@@ -142,7 +147,7 @@ public class CallbackSuggestionScheduler extends AppCompatActivity {
         }
         return returnItem;
     }
-    int GetSuggestedMinute(int suggestedIndex){
+    public static int GetSuggestedMinute(int suggestedIndex){
         int returnItem;
         switch (suggestedIndex){
             case 1: returnItem =  mResources.getInteger(R.integer.FirstSuggestedTimeMinute);
