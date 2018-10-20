@@ -38,7 +38,7 @@ public class CallbackActivity extends AppCompatActivity {
         this.mButtonScheduleCallback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CallbackHelper.TransferToConformationActivity(CallbackActivity.this,mDepartment, CallbackScheduleActivity.class);
+                CallbackHelper.TransferToSuggestionScheduler(CallbackActivity.this,mDepartment, CallbackSuggestionScheduler.class);
             }
         });
         this.mButtonCallImmediately.setOnClickListener(new View.OnClickListener() {

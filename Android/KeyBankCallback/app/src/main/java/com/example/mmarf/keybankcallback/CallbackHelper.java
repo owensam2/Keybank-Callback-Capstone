@@ -56,4 +56,10 @@ public class CallbackHelper {
         String[] listOfDepartments = context.getResources().getStringArray(R.array.ListOfDepartments);
         return listOfDepartments[index];
     }
+
+    public static void TransferToSuggestionScheduler(Context context, String department, Class<?> cls){
+        Intent SuggestionScheduler = new Intent(context.getApplicationContext(), cls);
+        SuggestionScheduler.putExtra("KeyBank.CallbackConformationActivity.DEPARTMENT", department);
+        context.startActivity(SuggestionScheduler);
+    }
 }

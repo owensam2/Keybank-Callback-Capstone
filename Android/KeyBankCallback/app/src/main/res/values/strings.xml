@@ -15,16 +15,30 @@
         <item>Investment Services</item>
     </string-array>
 
-    <string-array name="ListOfWeekdayHours">
+    <string-array name="ListOfWeekdayStartHours">
         <item>8-5</item>
         <item>8-5</item>
         <item>8-5</item>
         <item>8-5</item>
     </string-array>
 
-    <string-array name="ListOfSaturdayHours">
-        <item>8-1</item>
-        <item>8-1</item>
+    <string-array name="ListOfWeekdayEndHours">
+        <item>17</item>
+        <item>17</item>
+        <item>17</item>
+        <item>17</item>
+    </string-array>
+
+    <string-array name="ListOfSaturdayStartHours">
+        <item>8</item>
+        <item>8</item>
+        <item>0</item>
+        <item>0</item>
+    </string-array>
+
+    <string-array name="ListOfSaturdayEndHours">
+        <item>13</item>
+        <item>13</item>
         <item>0</item>
         <item>0</item>
     </string-array>
@@ -33,7 +47,6 @@
     <string name="request_callback">Request Callback</string>
     <string name="estimated_wait_time">Estimated wait time:</string>
     <string name="_100_minutes">100 Minutes</string>
-    <string name="schedule_callback">Schedule Callback</string>
     <string name="department">Department</string>
     <string name="call_immediately">Call Immediately</string>
     <string name="call_immediately_and_wait_on_hold">Call Immediately and wait on hold</string>
@@ -42,9 +55,10 @@
     <string name="main_page">Main Page</string>
     <string name="There_is_currently_no_wait">There is currently no wait</string>
     <string name="minutes">Minutes</string>
-    <string name="one_hour_from_now">One hour from now</string>
-    <string name="tomorrow_at_8_30_am">Tomorrow at 8:30 AM</string>
-    <string name="today_at_4_30_pm">Today at 4:30 PM</string>
-    <string name="schedule_callback">Schedule Callback</string>
+    <string name="at_1_00_pm">at 1:00:PM</string>
+    <string name="at_8_30_am">at 8:30 AM</string>
+    <string name="at_4_30_pm">at 4:30 PM</string>
+    <string name="today">Today </string>
     <string name="custom">Custom</string>
+    <string name="schedule_callback">Schedule Callback</string>
 </resources>
