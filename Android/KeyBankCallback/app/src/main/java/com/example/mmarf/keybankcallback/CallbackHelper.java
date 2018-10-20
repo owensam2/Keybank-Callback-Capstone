@@ -9,6 +9,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class CallbackHelper {
 
@@ -61,5 +64,28 @@ public class CallbackHelper {
         Intent SuggestionScheduler = new Intent(context.getApplicationContext(), cls);
         SuggestionScheduler.putExtra("KeyBank.CallbackConformationActivity.DEPARTMENT", department);
         context.startActivity(SuggestionScheduler);
+    }
+
+    public static boolean IsTimeAfterCurrentTime(Calendar compareCalendar) {
+        //Convert everything to the current timezone. Only comparing time here.
+        Calendar cal = Calendar.getInstance();
+        long gmtTime = cal.getTime().getTime();
+
+        long timezoneAlteredTime = gmtTime + TimeZone.getTimeZone(GetLocalTimeZone()).getRawOffset();
+        Calendar cSchedulerStartCal1 = Calendar.getInstance(TimeZone.getTimeZone(GetLocalTimeZone()));
+        cSchedulerStartCal1.setTimeInMillis(timezoneAlteredTime);
+        Date date1 = cSchedulerStartCal1.getTime();
+        Date date2 = compareCalendar.getTime();
+
+        if(date1.before(date2)) {
+            return true;
+        } else {
+
+            return false;
+        }
+    }
+
+    public static String GetLocalTimeZone(){
+        return "EST";
     }
 }

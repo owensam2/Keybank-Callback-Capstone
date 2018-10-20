@@ -55,10 +55,20 @@
     <string name="main_page">Main Page</string>
     <string name="There_is_currently_no_wait">There is currently no wait</string>
     <string name="minutes">Minutes</string>
-    <string name="at_1_00_pm">at 1:00:PM</string>
-    <string name="at_8_30_am">at 8:30 AM</string>
-    <string name="at_4_30_pm">at 4:30 PM</string>
+    <string name="at_1_00_pm">Today at 1:00:PM</string>
+    <string name="at_8_30_am">Today at 8:30 AM</string>
+    <string name="at_4_30_pm">Today at 4:30 PM</string>
     <string name="today">Today </string>
+    <string name="tomorrow">Tomorrow </string>
+    <string name="saturday">Saturday </string>
+    <string name="monday">Monday</string>
     <string name="custom">Custom</string>
     <string name="schedule_callback">Schedule Callback</string>
+
+    <integer name="FirstSuggestedTimeHour">8</integer>
+    <integer name="FirstSuggestedTimeMinute">30</integer>
+    <integer name="SecondSuggestedTimeHour">13</integer>
+    <integer name="SecondSuggestedTimeMinute">00</integer>
+    <integer name="ThirdSuggestedTimeHour">16</integer>
+    <integer name="ThirdSuggestedTimeMinute">30</integer>
 </resources>
