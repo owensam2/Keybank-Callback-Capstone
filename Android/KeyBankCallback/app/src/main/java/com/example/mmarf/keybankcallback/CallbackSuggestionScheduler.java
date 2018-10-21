@@ -45,13 +45,13 @@ public class CallbackSuggestionScheduler extends AppCompatActivity {
         this.mButtonTimeRank2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                CallbackQuestionsActivity.GetCallbackServerMediator().SetCallbackTime(CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, mButtonOrder[1]).getTime(), mDepartment);
             }
         });
         this.mButtonTimeRank3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                CallbackQuestionsActivity.GetCallbackServerMediator().SetCallbackTime(CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, mButtonOrder[2]).getTime(), mDepartment);
             }
         });
         this.mButtonTimeRankCustom.setOnClickListener(new View.OnClickListener() {
