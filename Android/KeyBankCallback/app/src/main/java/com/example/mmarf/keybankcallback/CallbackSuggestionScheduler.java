@@ -5,11 +5,7 @@ import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
 
 public class CallbackSuggestionScheduler extends AppCompatActivity {
     Button mButtonTimeRank1;
@@ -100,9 +96,4 @@ public class CallbackSuggestionScheduler extends AppCompatActivity {
             mButtonOrder[2] = 3;
         }
     }
-
-
-
-
-
 }

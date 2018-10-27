@@ -119,6 +119,9 @@ public class CallbackHelper {
         date.setMinutes(GetSuggestedMinute(context, suggestedIndex));
         date.setSeconds(0);
         cal.setTime(date);
+        //Check to see if it's for today or the "next" day.
+        if(!IsTimeAfterCurrentTime(cal))
+            cal.add(Calendar.HOUR_OF_DAY, 24);
         return cal;
     }
 
