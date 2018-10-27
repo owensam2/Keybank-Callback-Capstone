@@ -32,7 +32,7 @@ public class CallbackActivityNoWait extends AppCompatActivity {
         scheduleCallback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CallbackHelper.TransferToSuggestionScheduler(CallbackActivityNoWait.this,mDepartment, CallbackSuggestionScheduler.class);
+                CallbackHelper.TransferToSuggestionScheduler(CallbackActivityNoWait.this,mDepartment);
             }
         });
     }

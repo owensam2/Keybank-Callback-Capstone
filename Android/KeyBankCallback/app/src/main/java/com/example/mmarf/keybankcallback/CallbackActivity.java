@@ -32,13 +32,13 @@ public class CallbackActivity extends AppCompatActivity {
         this.mButtonRequestCallback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CallbackHelper.TransferToConformationActivity(CallbackActivity.this,mDepartment ,CallbackConformationActivity.class);
+                CallbackHelper.TransferToConformationActivity(CallbackActivity.this,mDepartment);
             }
         });
         this.mButtonScheduleCallback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CallbackHelper.TransferToSuggestionScheduler(CallbackActivity.this,mDepartment, CallbackSuggestionScheduler.class);
+                CallbackHelper.TransferToSuggestionScheduler(CallbackActivity.this,mDepartment);
             }
         });
         this.mButtonCallImmediately.setOnClickListener(new View.OnClickListener() {

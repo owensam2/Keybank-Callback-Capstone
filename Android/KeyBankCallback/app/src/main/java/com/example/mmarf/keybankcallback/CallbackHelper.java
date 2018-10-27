@@ -10,6 +10,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.format.DateFormat;
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -50,8 +53,8 @@ public class CallbackHelper {
         context.startActivity(numberToCall);
     }
 
-    public static void TransferToConformationActivity(Context context, String department, Class<?> cls){
-        Intent callbackScheduleActivity = new Intent(context.getApplicationContext(), cls);
+    public static void TransferToConformationActivity(Context context, String department){
+        Intent callbackScheduleActivity = new Intent(context.getApplicationContext(), CallbackConformationTimeActivity.class);
         callbackScheduleActivity.putExtra("KeyBank.CallbackConformationActivity.DEPARTMENT", department);
         context.startActivity(callbackScheduleActivity);
     }
@@ -61,8 +64,14 @@ public class CallbackHelper {
         return listOfDepartments[index];
     }
 
-    public static void TransferToSuggestionScheduler(Context context, String department, Class<?> cls){
-        Intent SuggestionScheduler = new Intent(context.getApplicationContext(), cls);
+    public static void TransferToSuggestionScheduler(Context context, String department){
+        Intent SuggestionScheduler = new Intent(context.getApplicationContext(), CallbackSuggestionScheduler.class);
+        SuggestionScheduler.putExtra("KeyBank.CallbackConformationActivity.DEPARTMENT", department);
+        context.startActivity(SuggestionScheduler);
+    }
+
+    public static void TransferToCustomScheduler(Context context, String department){
+        Intent SuggestionScheduler = new Intent(context.getApplicationContext(), CallbackScheduleActivity.class);
         SuggestionScheduler.putExtra("KeyBank.CallbackConformationActivity.DEPARTMENT", department);
         context.startActivity(SuggestionScheduler);
     }
@@ -158,5 +167,14 @@ public class CallbackHelper {
         return FormatSuggestedTimeString(availableDay,
                 GetSuggestedHour(context, suggestedIndex),
                 GetSuggestedMinute(context, suggestedIndex));
+    }
+
+    public static String GetTimeStringFromDate(Date date){
+        SimpleDateFormat df = new SimpleDateFormat("h:mm a");
+        return df.format(date.getTime());
+    }
+
+    public  static  String GetDayStringFromDate(Date date){
+        return (String) DateFormat.format("EEEE", date);
     }
 }
