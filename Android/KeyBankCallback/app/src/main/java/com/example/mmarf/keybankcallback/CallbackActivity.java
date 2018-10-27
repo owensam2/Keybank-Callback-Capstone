@@ -55,6 +55,6 @@ public class CallbackActivity extends AppCompatActivity {
         textViewDepartment.setText(department);
         TextView textViewWaitMinutes =  findViewById(R.id.textViewWaitMinutes);
         textViewWaitMinutes.setText(mCalculating);
-        textViewWaitMinutes.setText(String.valueOf(CallbackQuestionsActivity.GetCallbackServerMediator().GetEstimatedTimeRemaining(department)) + mMinutesText);
+        textViewWaitMinutes.setText(String.valueOf(CallbackHelper.GetCallbackServerMediator().GetEstimatedTimeRemaining(department)) + mMinutesText);
     }
 }

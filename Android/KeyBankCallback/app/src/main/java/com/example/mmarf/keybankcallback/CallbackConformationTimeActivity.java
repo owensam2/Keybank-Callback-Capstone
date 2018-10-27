@@ -20,7 +20,7 @@ public class CallbackConformationTimeActivity extends AppCompatActivity {
         //Get the desired department
         TextView textViewCallbackDay = findViewById(R.id.textViewCallbackDay);
         TextView textViewCallbackTime = findViewById(R.id.textViewCallbackTime);
-        Date scheduledDate = CallbackQuestionsActivity.GetCallbackServerMediator().GetCallbackTime();
+        Date scheduledDate = CallbackHelper.GetCallbackServerMediator().GetCallbackTime();
 
         textViewCallbackDay.setText(String.valueOf(CallbackHelper.GetDayStringFromDate(scheduledDate)));
         textViewCallbackTime.setText(CallbackHelper.GetTimeStringFromDate(scheduledDate));

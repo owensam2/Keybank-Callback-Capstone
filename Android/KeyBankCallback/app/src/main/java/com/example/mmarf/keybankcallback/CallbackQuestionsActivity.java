@@ -16,13 +16,12 @@ public class CallbackQuestionsActivity extends AppCompatActivity {
     ListView CallbackQuestionsListView;
     String[] ListOfQuestions;
     String[] ListOfDepartments;
-    static CallbackServerMediator mCallbackServerMediator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_callback_questions);
-        this.mCallbackServerMediator = new CallbackServerMediator("CallbackServer");
+        CallbackHelper.InitializeServerMediator();
 
         Resources resources = getResources();
         CallbackQuestionsListView = findViewById(R.id.CallbackQuestionsListView);
@@ -37,7 +36,7 @@ public class CallbackQuestionsActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 //Find out if there is a wait or not. This will determine which screen is chosen next.
-                if(GetCallbackServerMediator().GetEstimatedTimeRemaining(CallbackHelper.GetDepartmentName(position, CallbackQuestionsActivity.this)) > 0){
+                if(CallbackHelper.GetCallbackServerMediator().GetEstimatedTimeRemaining(CallbackHelper.GetDepartmentName(position, CallbackQuestionsActivity.this)) > 0){
                     Intent callbackActivity = new Intent(getApplicationContext(), CallbackActivity.class);
                     callbackActivity.putExtra("KeyBank.CallbackActivity.ITEM_INDEX", position);
                     startActivity(callbackActivity);
@@ -48,9 +47,5 @@ public class CallbackQuestionsActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-   static CallbackServerMediator GetCallbackServerMediator(){
-        return mCallbackServerMediator;
     }
 }

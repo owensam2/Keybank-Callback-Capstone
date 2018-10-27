@@ -19,10 +19,12 @@ import java.util.TimeZone;
 
 public class CallbackHelper {
 
+    private static CallbackServerMediator mCallbackServerMediator;
+
     public static void Call(Context context){
         Intent numberToCall = new Intent(Intent.ACTION_CALL);
         //TODO: Update this to the actual phone number
-        numberToCall.setData(Uri.parse("tel:" + String.valueOf(CallbackQuestionsActivity.GetCallbackServerMediator().GetPhoneNumberForDepartment("Fraud"))));
+        numberToCall.setData(Uri.parse("tel:" + String.valueOf(CallbackHelper.GetCallbackServerMediator().GetPhoneNumberForDepartment("Fraud"))));
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             AlertDialog.Builder builder;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -97,6 +99,10 @@ public class CallbackHelper {
 
     public static String GetLocalTimeZone(){
         return "EST";
+    }
+
+    public static String GetNextAvailableTimeForDepartment(String department){
+        return "";
     }
 
     public static String FormatSuggestedTimeString(String day, int hour, int minute){
@@ -179,5 +185,12 @@ public class CallbackHelper {
 
     public  static  String GetDayStringFromDate(Date date){
         return (String) DateFormat.format("EEEE", date);
+    }
+    public static void InitializeServerMediator(){
+        mCallbackServerMediator = new CallbackServerMediator("CallbackServer");
+    }
+
+    public static CallbackServerMediator GetCallbackServerMediator(){
+        return mCallbackServerMediator;
     }
 }

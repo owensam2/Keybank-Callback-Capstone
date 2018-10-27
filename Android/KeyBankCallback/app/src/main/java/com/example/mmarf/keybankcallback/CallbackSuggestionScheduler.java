@@ -34,21 +34,21 @@ public class CallbackSuggestionScheduler extends AppCompatActivity {
         this.mButtonTimeRank1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CallbackQuestionsActivity.GetCallbackServerMediator().SetCallbackTime(CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, mButtonOrder[0]).getTime(), mDepartment);
+                CallbackHelper.GetCallbackServerMediator().SetCallbackTime(CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, mButtonOrder[0]).getTime(), mDepartment);
                 CallbackHelper.TransferToConformationActivity(CallbackSuggestionScheduler.this, mDepartment);
             }
         });
         this.mButtonTimeRank2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CallbackQuestionsActivity.GetCallbackServerMediator().SetCallbackTime(CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, mButtonOrder[1]).getTime(), mDepartment);
+                CallbackHelper.GetCallbackServerMediator().SetCallbackTime(CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, mButtonOrder[1]).getTime(), mDepartment);
                 CallbackHelper.TransferToConformationActivity(CallbackSuggestionScheduler.this, mDepartment);
             }
         });
         this.mButtonTimeRank3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CallbackQuestionsActivity.GetCallbackServerMediator().SetCallbackTime(CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, mButtonOrder[2]).getTime(), mDepartment);
+                CallbackHelper.GetCallbackServerMediator().SetCallbackTime(CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, mButtonOrder[2]).getTime(), mDepartment);
                 CallbackHelper.TransferToConformationActivity(CallbackSuggestionScheduler.this, mDepartment);
             }
         });
