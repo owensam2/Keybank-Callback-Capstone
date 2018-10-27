@@ -56,15 +56,15 @@ public class CallbackHelper {
         context.startActivity(numberToCall);
     }
 
+    public static String GetDepartmentName(int index,Context context){
+        String[] listOfDepartments = context.getResources().getStringArray(R.array.ListOfDepartments);
+        return listOfDepartments[index];
+    }
+
     public static void TransferToConformationActivity(Context context, String department){
         Intent callbackScheduleActivity = new Intent(context.getApplicationContext(), CallbackConformationTimeActivity.class);
         callbackScheduleActivity.putExtra("KeyBank.CallbackConformationActivity.DEPARTMENT", department);
         context.startActivity(callbackScheduleActivity);
-    }
-
-    public static String GetDepartmentName(int index,Context context){
-        String[] listOfDepartments = context.getResources().getStringArray(R.array.ListOfDepartments);
-        return listOfDepartments[index];
     }
 
     public static void TransferToSuggestionScheduler(Context context, String department){
