@@ -1,6 +1,8 @@
 package com.example.mmarf.keybankcallback;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class CallbackServerMediator {
     String mServerInfo;
@@ -15,6 +17,11 @@ public class CallbackServerMediator {
     private void ConnectToServer(){
         //TODO Connect
 
+    }
+
+    public Date GetNextAvailableTime(String department){
+        //TODO Get date of next agailable from server
+        return GetOfflineNextAvailableTime(department);
     }
 
     public int GetEstimatedTimeRemaining(String department){
@@ -36,6 +43,14 @@ public class CallbackServerMediator {
     public Date GetCallbackTime(){
         //TODO: Get callback time from server
         return mCallbackDate;
+    }
+
+    private Date GetOfflineNextAvailableTime(String department){
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
+        if (cal.getTime().getDay() > 5){
+            cal.add(Calendar.HOUR_OF_DAY, 24);
+        }
+        return cal.getTime();
     }
 
     private int GetOfflineTime(String department){

@@ -7,13 +7,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.Calendar;
+
 public class CallbackSuggestionScheduler extends AppCompatActivity {
     Button mButtonTimeRank1;
     Button mButtonTimeRank2;
     Button mButtonTimeRank3;
     Button mButtonTimeRankCustom;
-    public static Resources mResources;
-    int[] mButtonOrder = new int[3];
+    private static int mNumOfButtons = 3;
+    int[] mButtonOrder = new int[mNumOfButtons];
     String mDepartment;
 
     @Override
@@ -34,21 +36,21 @@ public class CallbackSuggestionScheduler extends AppCompatActivity {
         this.mButtonTimeRank1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CallbackHelper.GetCallbackServerMediator().SetCallbackTime(CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, mButtonOrder[0]).getTime(), mDepartment);
+                CallbackHelper.GetCallbackServerMediator().SetCallbackTime(CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, mButtonOrder[0], mDepartment).getTime(), mDepartment);
                 CallbackHelper.TransferToConformationActivity(CallbackSuggestionScheduler.this, mDepartment);
             }
         });
         this.mButtonTimeRank2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CallbackHelper.GetCallbackServerMediator().SetCallbackTime(CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, mButtonOrder[1]).getTime(), mDepartment);
+                CallbackHelper.GetCallbackServerMediator().SetCallbackTime(CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, mButtonOrder[1], mDepartment).getTime(), mDepartment);
                 CallbackHelper.TransferToConformationActivity(CallbackSuggestionScheduler.this, mDepartment);
             }
         });
         this.mButtonTimeRank3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CallbackHelper.GetCallbackServerMediator().SetCallbackTime(CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, mButtonOrder[2]).getTime(), mDepartment);
+                CallbackHelper.GetCallbackServerMediator().SetCallbackTime(CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, mButtonOrder[2], mDepartment).getTime(), mDepartment);
                 CallbackHelper.TransferToConformationActivity(CallbackSuggestionScheduler.this, mDepartment);
             }
         });
@@ -63,37 +65,31 @@ public class CallbackSuggestionScheduler extends AppCompatActivity {
 
     void SetupButtonText(){
         //Figure today/tomorrow. Rank according to first suggested.
-        if(CallbackHelper.IsTimeAfterCurrentTime(CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, 1))){
-            this.mButtonTimeRank1.setText(CallbackHelper.GetSuggestedTimeString(CallbackSuggestionScheduler.this,1, true));
-            this.mButtonTimeRank2.setText(CallbackHelper.GetSuggestedTimeString(CallbackSuggestionScheduler.this,2, true));
-            this.mButtonTimeRank3.setText(CallbackHelper.GetSuggestedTimeString(CallbackSuggestionScheduler.this,3, true));
+        Calendar[] calendar = new Calendar[mNumOfButtons];
+
+        calendar[0] = CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, 1, mDepartment);
+        calendar[1] = CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, 2, mDepartment);
+        calendar[2] = CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, 3, mDepartment);
+
+        //Find the lowest date
+        if(calendar[0].getTime().before(calendar[1].getTime())){
             mButtonOrder[0] = 1;
             mButtonOrder[1] = 2;
             mButtonOrder[2] = 3;
         }
-        else if(CallbackHelper.IsTimeAfterCurrentTime(CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, 2))){
-            this.mButtonTimeRank1.setText(CallbackHelper.GetSuggestedTimeString(CallbackSuggestionScheduler.this,2, true));
-            this.mButtonTimeRank2.setText(CallbackHelper.GetSuggestedTimeString(CallbackSuggestionScheduler.this,3, true));
-            this.mButtonTimeRank3.setText(CallbackHelper.GetSuggestedTimeString(CallbackSuggestionScheduler.this,1, false));
+        else if(calendar[1].getTime().before(calendar[2].getTime())){
             mButtonOrder[0] = 2;
             mButtonOrder[1] = 3;
             mButtonOrder[2] = 1;
         }
-        else if(CallbackHelper.IsTimeAfterCurrentTime(CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, 3))){
-            this.mButtonTimeRank1.setText(CallbackHelper.GetSuggestedTimeString(CallbackSuggestionScheduler.this,3, true));
-            this.mButtonTimeRank2.setText(CallbackHelper.GetSuggestedTimeString(CallbackSuggestionScheduler.this,1, false));
-            this.mButtonTimeRank3.setText(CallbackHelper.GetSuggestedTimeString(CallbackSuggestionScheduler.this,2, false));
+        else{
             mButtonOrder[0] = 3;
             mButtonOrder[1] = 1;
             mButtonOrder[2] = 2;
         }
-        else{
-            this.mButtonTimeRank1.setText(CallbackHelper.GetSuggestedTimeString(CallbackSuggestionScheduler.this,1, false));
-            this.mButtonTimeRank2.setText(CallbackHelper.GetSuggestedTimeString(CallbackSuggestionScheduler.this,2, false));
-            this.mButtonTimeRank3.setText(CallbackHelper.GetSuggestedTimeString(CallbackSuggestionScheduler.this,3, false));
-            mButtonOrder[0] = 1;
-            mButtonOrder[1] = 2;
-            mButtonOrder[2] = 3;
-        }
+
+        this.mButtonTimeRank1.setText(CallbackHelper.GetSuggestedTimeString(calendar[mButtonOrder[0]-1].getTime()));
+        this.mButtonTimeRank2.setText(CallbackHelper.GetSuggestedTimeString(calendar[mButtonOrder[1]-1].getTime()));
+        this.mButtonTimeRank3.setText(CallbackHelper.GetSuggestedTimeString(calendar[mButtonOrder[2]-1].getTime()));
     }
 }

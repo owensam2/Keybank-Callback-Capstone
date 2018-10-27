@@ -102,6 +102,7 @@ public class CallbackHelper {
     }
 
     public static String GetNextAvailableTimeForDepartment(String department){
+
         return "";
     }
 
@@ -117,18 +118,26 @@ public class CallbackHelper {
         return String.format(day + " at " + String.valueOf(hour) + ":" + minuteString + " " + amPm);
     }
 
-    public static Calendar GetSuggestedCalendar(Context context, int suggestedIndex){
+    public static Calendar GetSuggestedCalendar(Context context, int suggestedIndex, String department){
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
-
+        //This will return the date as if it's set for today.
         Date date = new Date();
         date.setHours(GetSuggestedHour(context, suggestedIndex));
         date.setMinutes(GetSuggestedMinute(context, suggestedIndex));
         date.setSeconds(0);
         cal.setTime(date);
-        //Check to see if it's for today or the "next" day.
-        if(!IsTimeAfterCurrentTime(cal))
-            cal.add(Calendar.HOUR_OF_DAY, 24);
+        //Check to see if it's for today or the "next" day. If so, get the next available day from the server
+        if(!IsTimeAfterCurrentTime(cal)){
+            Date nextAvailableDate = GetCallbackServerMediator().GetNextAvailableTime(department);
+            cal.add(Calendar.HOUR_OF_DAY, GetHoursInDayIncrementsFromDates(cal.getTime(), nextAvailableDate));
+        }
         return cal;
+    }
+
+    public static int GetHoursInDayIncrementsFromDates(Date dateOfInterest, Date dateNextAvailable){
+        long difference = Math.abs(dateOfInterest.getTime() - dateNextAvailable.getTime());
+        long differenceDates = difference / (24 * 60 * 60 * 1000);
+        return (int)(differenceDates + 1) * 24;
     }
 
     public static int GetSuggestedHour(Context context, int suggestedIndex){
@@ -164,18 +173,8 @@ public class CallbackHelper {
         return returnItem;
     }
 
-    public static String GetSuggestedTimeString(Context context, int suggestedIndex, boolean isToday) {
-        String availableDay;
-        Resources resources = context.getResources();
-
-        //TODO: Get something that may not be tomorrow.
-        if(isToday)
-            availableDay = resources.getString(R.string.today);
-        else
-            availableDay = resources.getString(R.string.tomorrow);
-        return FormatSuggestedTimeString(availableDay,
-                GetSuggestedHour(context, suggestedIndex),
-                GetSuggestedMinute(context, suggestedIndex));
+    public static String GetSuggestedTimeString(Date date) {
+        return FormatSuggestedTimeString(GetDayStringFromDate(date),date.getHours(), date.getMinutes());
     }
 
     public static String GetTimeStringFromDate(Date date){
