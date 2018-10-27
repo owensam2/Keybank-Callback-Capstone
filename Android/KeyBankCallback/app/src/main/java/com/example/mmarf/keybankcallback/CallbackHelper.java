@@ -20,6 +20,7 @@ import java.util.TimeZone;
 public class CallbackHelper {
 
     private static CallbackServerMediator mCallbackServerMediator;
+    private static Date mCustomStartingDate;
 
     public static void Call(Context context){
         Intent numberToCall = new Intent(Intent.ACTION_CALL);
@@ -70,6 +71,12 @@ public class CallbackHelper {
         Intent SuggestionScheduler = new Intent(context.getApplicationContext(), CallbackSuggestionScheduler.class);
         SuggestionScheduler.putExtra("KeyBank.CallbackConformationActivity.DEPARTMENT", department);
         context.startActivity(SuggestionScheduler);
+    }
+
+    public static void TransferToTimeScheduler(Context context, String department){
+        Intent CallbackScheduleActivityTime = new Intent(context.getApplicationContext(), CallbackScheduleActivityTime.class);
+        CallbackScheduleActivityTime.putExtra("KeyBank.CallbackConformationActivity.DEPARTMENT", department);
+        context.startActivity(CallbackScheduleActivityTime);
     }
 
     public static void TransferToCustomScheduler(Context context, String department){
@@ -201,5 +208,13 @@ public class CallbackHelper {
 
     public static CallbackServerMediator GetCallbackServerMediator(){
         return mCallbackServerMediator;
+    }
+
+    public static void SetupStartingDateForCustomScheduler(Date date){
+        mCustomStartingDate = date;
+    }
+
+    public static Date GetCustomStartingDate(){
+        return mCustomStartingDate;
     }
 }
