@@ -20,7 +20,7 @@ public class CallbackServerMediator {
     }
 
     public Date GetNextAvailableTime(String department){
-        //TODO Get date of next agailable from server
+        //TODO Get date of next available from server
         return GetOfflineNextAvailableTime(department);
     }
 
@@ -47,8 +47,22 @@ public class CallbackServerMediator {
 
     private Date GetOfflineNextAvailableTime(String department){
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
-        if (cal.getTime().getDay() > 5){
-            cal.add(Calendar.HOUR_OF_DAY, 24);
+        int hour = cal.getTime().getHours();
+        //If it's after closing, add a day. If it's the weekend, make sure it's Monday.
+        if(hour > 17){
+            Date date = new Date();
+            date.setHours(8);
+            date.setMinutes(30);
+            date.setSeconds(0);
+            cal.setTime(date);
+            int day = cal.getTime().getDay();
+            //If it's saturday, add 48 hours, else, it will just be the next day.
+            if (day == 6){
+                cal.add(Calendar.HOUR_OF_DAY, 48);
+            }
+            else{
+                cal.add(Calendar.HOUR_OF_DAY, 24);
+            }
         }
         return cal.getTime();
     }

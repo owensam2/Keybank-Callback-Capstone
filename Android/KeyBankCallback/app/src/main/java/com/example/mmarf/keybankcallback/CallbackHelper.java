@@ -101,9 +101,17 @@ public class CallbackHelper {
         return "EST";
     }
 
-    public static String GetNextAvailableTimeForDepartment(String department){
+    public static Date GetNextAvailableDayForDepartment(String department){
+        //Returns the opening time and day available for the department.
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
+        Date date = GetNextAvailableTimeForDepartment(department);
+        cal.setTime(date);
+        cal.add(Calendar.HOUR_OF_DAY, GetHoursInDayIncrementsFromDates(cal.getTime(), date));
+        return cal.getTime();
+    }
 
-        return "";
+    public static Date GetNextAvailableTimeForDepartment(String department){
+        return mCallbackServerMediator.GetNextAvailableTime(department);
     }
 
     public static String FormatSuggestedTimeString(String day, int hour, int minute){
@@ -135,7 +143,8 @@ public class CallbackHelper {
     }
 
     public static int GetHoursInDayIncrementsFromDates(Date dateOfInterest, Date dateNextAvailable){
-        long difference = Math.abs(dateOfInterest.getTime() - dateNextAvailable.getTime());
+        //Subtract 1 millisecond so that if the times are identical, then make sure it gets the correct "next day"
+        long difference = Math.abs(dateOfInterest.getTime() - dateNextAvailable.getTime()) - 100;
         long differenceDates = difference / (24 * 60 * 60 * 1000);
         return (int)(differenceDates + 1) * 24;
     }
@@ -183,6 +192,7 @@ public class CallbackHelper {
     }
 
     public  static  String GetDayStringFromDate(Date date){
+        //TODO differentiate from today/tomorrow/different day
         return (String) DateFormat.format("EEEE", date);
     }
     public static void InitializeServerMediator(){

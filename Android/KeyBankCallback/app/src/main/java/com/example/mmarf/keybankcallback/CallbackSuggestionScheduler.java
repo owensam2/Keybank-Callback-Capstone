@@ -57,7 +57,7 @@ public class CallbackSuggestionScheduler extends AppCompatActivity {
         this.mButtonTimeRankCustom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Pass off to the custom scheduler.
+                //Pass off to the custom scheduler
             CallbackHelper.TransferToCustomScheduler(CallbackSuggestionScheduler.this, mDepartment);
             }
         });
@@ -72,7 +72,7 @@ public class CallbackSuggestionScheduler extends AppCompatActivity {
         calendar[2] = CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, 3, mDepartment);
 
         //Find the lowest date
-        if(calendar[0].getTime().before(calendar[1].getTime())){
+        if(calendar[0].getTime().before(calendar[1].getTime()) && calendar[1].getTime().before(calendar[2].getTime())){
             mButtonOrder[0] = 1;
             mButtonOrder[1] = 2;
             mButtonOrder[2] = 3;
@@ -88,6 +88,7 @@ public class CallbackSuggestionScheduler extends AppCompatActivity {
             mButtonOrder[2] = 2;
         }
 
+        //Deal with one based vs zero based index
         this.mButtonTimeRank1.setText(CallbackHelper.GetSuggestedTimeString(calendar[mButtonOrder[0]-1].getTime()));
         this.mButtonTimeRank2.setText(CallbackHelper.GetSuggestedTimeString(calendar[mButtonOrder[1]-1].getTime()));
         this.mButtonTimeRank3.setText(CallbackHelper.GetSuggestedTimeString(calendar[mButtonOrder[2]-1].getTime()));

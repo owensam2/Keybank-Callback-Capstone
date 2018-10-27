@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/buttonCallbackSchedulerToday"
+        android:id="@+id/buttonCallbackSchedulerFirstDay"
         android:layout_width="198dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -36,7 +36,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewScheduleTime" />
 
     <Button
-        android:id="@+id/buttonCallbackSchedulerTomorrow"
+        android:id="@+id/buttonCallbackSchedulerSecondDay"
         android:layout_width="194dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -48,6 +48,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonCallbackSchedulerToday" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonCallbackSchedulerFirstDay" />
 
 </android.support.constraint.ConstraintLayout>
