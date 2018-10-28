@@ -85,25 +85,6 @@ public class CallbackHelper {
         context.startActivity(SuggestionScheduler);
     }
 
-    public static boolean IsTimeAfterCurrentTime(Calendar compareCalendar) {
-        //Convert everything to the current timezone. Only comparing time here.
-        Calendar cal = Calendar.getInstance();
-        long gmtTime = cal.getTime().getTime();
-
-        long timezoneAlteredTime = gmtTime + TimeZone.getTimeZone(GetLocalTimeZone()).getRawOffset();
-        Calendar cSchedulerStartCal1 = Calendar.getInstance(TimeZone.getTimeZone(GetLocalTimeZone()));
-        cSchedulerStartCal1.setTimeInMillis(timezoneAlteredTime);
-        Date date1 = cSchedulerStartCal1.getTime();
-        Date date2 = compareCalendar.getTime();
-
-        if(date1.before(date2)) {
-            return true;
-        } else {
-
-            return false;
-        }
-    }
-
     public static String GetLocalTimeZone(){
         return "EST";
     }
@@ -142,10 +123,9 @@ public class CallbackHelper {
         date.setSeconds(0);
         cal.setTime(date);
         //Check to see if it's for today or the "next" day. If so, get the next available day from the server
-        if(!IsTimeAfterCurrentTime(cal)){
-            Date nextAvailableDate = GetCallbackServerMediator().GetNextAvailableTime(department);
+        Date nextAvailableDate = GetCallbackServerMediator().GetNextAvailableTime(department);
+        if(cal.getTime().before(nextAvailableDate))
             cal.add(Calendar.HOUR_OF_DAY, GetHoursInDayIncrementsFromDates(cal.getTime(), nextAvailableDate));
-        }
         return cal;
     }
 
@@ -153,7 +133,8 @@ public class CallbackHelper {
         //Subtract 1 millisecond so that if the times are identical, then make sure it gets the correct "next day"
         long difference = Math.abs(dateOfInterest.getTime() - dateNextAvailable.getTime()) - 100;
         long differenceDates = difference / (24 * 60 * 60 * 1000);
-        return (int)(differenceDates + 1) * 24;
+        int differenceDay = (int)differenceDates;
+        return (differenceDay + 1) * 24;
     }
 
     public static int GetSuggestedHour(Context context, int suggestedIndex){

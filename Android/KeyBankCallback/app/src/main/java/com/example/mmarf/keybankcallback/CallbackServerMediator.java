@@ -49,13 +49,14 @@ public class CallbackServerMediator {
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
         int hour = cal.getTime().getHours();
         //If it's after closing, add a day. If it's the weekend, make sure it's Monday.
-        if(hour > 17){
+        int day = cal.getTime().getDay();
+        //Sunday is closed, Saturday is partial.
+        if(hour > 17 || day == 0){
             Date date = new Date();
             date.setHours(8);
             date.setMinutes(30);
             date.setSeconds(0);
             cal.setTime(date);
-            int day = cal.getTime().getDay();
             //If it's saturday, add 48 hours, else, it will just be the next day.
             if (day == 6){
                 cal.add(Calendar.HOUR_OF_DAY, 48);
