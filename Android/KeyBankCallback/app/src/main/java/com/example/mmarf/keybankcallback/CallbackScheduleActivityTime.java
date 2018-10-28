@@ -1,20 +1,29 @@
 package com.example.mmarf.keybankcallback;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import java.util.Date;
 
 public class CallbackScheduleActivityTime extends Activity {
     TextView mTextViewScheduleTodayTomorrow;
     Spinner mSpinnerHour;
     Spinner mSpinnerMinute;
+    String mDepartment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_callback_schedule_time);
+        Intent intent = getIntent();
+        mDepartment = intent.getStringExtra("KeyBank.CallbackConformationActivity.DEPARTMENT");
+
         //Get the day that we are starting from.
         this.mTextViewScheduleTodayTomorrow = findViewById(R.id.textViewScheduleTodayTomorrow);
         this.mSpinnerHour = findViewById(R.id.spinnerHour);
@@ -22,11 +31,35 @@ public class CallbackScheduleActivityTime extends Activity {
         SetupLabel();
         AddHoursToSpinner();
         AddMinutesToSpinner();
+        Button buttonConfirmSchedule = findViewById(R.id.buttonConfirmSchedule);
+        buttonConfirmSchedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Send what is present in the spinner boxes to the scheduler.
+                String hour = (String)mSpinnerHour.getSelectedItem();
+                String minute = (String)mSpinnerMinute.getSelectedItem();
+                Date dateToModify = CallbackHelper.GetCustomStartingDate();
+                dateToModify.setHours(GetProperHourToDisplay(hour));
+                dateToModify.setMinutes(Integer.valueOf(minute));
+                CallbackHelper.GetCallbackServerMediator().SetCallbackTime(dateToModify, mDepartment);
+                CallbackHelper.TransferToConformationActivity(CallbackScheduleActivityTime.this, mDepartment);
+            }
+        });
+
     }
 
     private void SetupLabel(){
         mTextViewScheduleTodayTomorrow.setText(CallbackHelper.GetDayStringFromDate(CallbackHelper.GetCustomStartingDate()));
     }
+
+    private int GetProperHourToDisplay(String hour){
+        //If it's less than 8, add 12 hours to it.
+        int realHour = Integer.valueOf(hour);
+        if(realHour < 8)
+            realHour = realHour + 12;
+        return realHour;
+    }
+
 
     private void AddHoursToSpinner(){
         String[] arrayAllHours;
