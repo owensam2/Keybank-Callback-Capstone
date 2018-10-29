@@ -37,21 +37,21 @@ public class CallbackSuggestionScheduler extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 CallbackHelper.GetCallbackServerMediator().SetCallbackTime(CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, mButtonOrder[0], mDepartment).getTime(), mDepartment);
-                CallbackHelper.TransferToConformationActivity(CallbackSuggestionScheduler.this, mDepartment);
+                CallbackHelper.TransferToConformationTimeActivity(CallbackSuggestionScheduler.this, mDepartment);
             }
         });
         this.mButtonTimeRank2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CallbackHelper.GetCallbackServerMediator().SetCallbackTime(CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, mButtonOrder[1], mDepartment).getTime(), mDepartment);
-                CallbackHelper.TransferToConformationActivity(CallbackSuggestionScheduler.this, mDepartment);
+                CallbackHelper.TransferToConformationTimeActivity(CallbackSuggestionScheduler.this, mDepartment);
             }
         });
         this.mButtonTimeRank3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CallbackHelper.GetCallbackServerMediator().SetCallbackTime(CallbackHelper.GetSuggestedCalendar(CallbackSuggestionScheduler.this, mButtonOrder[2], mDepartment).getTime(), mDepartment);
-                CallbackHelper.TransferToConformationActivity(CallbackSuggestionScheduler.this, mDepartment);
+                CallbackHelper.TransferToConformationTimeActivity(CallbackSuggestionScheduler.this, mDepartment);
             }
         });
         this.mButtonTimeRankCustom.setOnClickListener(new View.OnClickListener() {

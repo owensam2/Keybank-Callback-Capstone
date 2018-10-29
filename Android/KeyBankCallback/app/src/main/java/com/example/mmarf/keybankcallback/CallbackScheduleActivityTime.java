@@ -42,7 +42,7 @@ public class CallbackScheduleActivityTime extends Activity {
                 dateToModify.setHours(GetProperHourToDisplay(hour));
                 dateToModify.setMinutes(Integer.valueOf(minute));
                 CallbackHelper.GetCallbackServerMediator().SetCallbackTime(dateToModify, mDepartment);
-                CallbackHelper.TransferToConformationActivity(CallbackScheduleActivityTime.this, mDepartment);
+                CallbackHelper.TransferToConformationTimeActivity(CallbackScheduleActivityTime.this, mDepartment);
             }
         });
 
