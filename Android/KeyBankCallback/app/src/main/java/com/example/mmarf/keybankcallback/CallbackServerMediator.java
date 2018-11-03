@@ -4,12 +4,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class CallbackServerMediator {
-    String mServerInfo;
-    Date mCallbackDate;
-    String mCallbackDepartment;
+class CallbackServerMediator {
+    private String mServerInfo;
+    private Date mCallbackDate;
+    private String mCallbackDepartment;
 
-    public CallbackServerMediator(String serverInfo){
+    CallbackServerMediator(String serverInfo){
         mServerInfo = serverInfo;
         ConnectToServer();
     }
@@ -19,30 +19,34 @@ public class CallbackServerMediator {
 
     }
 
-    public Date GetNextAvailableTime(String department){
+    Date GetNextAvailableTime(String department){
         //TODO Get date of next available from server
         return GetOfflineNextAvailableTime(department);
     }
 
-    public int GetEstimatedTimeRemaining(String department){
+    int GetEstimatedTimeRemaining(String department){
         //TODO Get time
         return GetOfflineTime(department);
     }
 
-    public String GetPhoneNumberForDepartment(String department){
+    String GetPhoneNumberForDepartment(String department){
         //TODO Get phone number
         return  GetOfflinePhoneNumber();
     }
 
-    public void SetCallbackTime(Date date, String department){
+    void SetCallbackTime(Date date, String department){
         //TODO: Send callback time to server
         mCallbackDepartment = department;
         mCallbackDate = date;
     }
 
-    public Date GetCallbackTime(){
+    Date GetCallbackTime(){
         //TODO: Get callback time from server
         return mCallbackDate;
+    }
+
+    static void CancelCallback(){
+        //TODO: Send the server a cancellation notification
     }
 
     private Date GetOfflineNextAvailableTime(String department){

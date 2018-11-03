@@ -7,10 +7,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
         android:layout_marginTop="12dp"
-        android:text="Question to user"
+        android:text="@string/question_to_user"
         android:textSize="24sp" />
 
     <TextView
@@ -19,6 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/QuestionTextView"
+        android:layout_alignLeft="@+id/QuestionTextView"
         android:layout_marginTop="54dp"
-        android:text="Assigned Department" />
+        android:text="@string/assigned_department" />
 </RelativeLayout>

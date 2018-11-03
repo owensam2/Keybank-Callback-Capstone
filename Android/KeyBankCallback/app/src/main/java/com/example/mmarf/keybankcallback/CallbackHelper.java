@@ -22,7 +22,7 @@ public class CallbackHelper {
     private static CallbackServerMediator mCallbackServerMediator;
     private static Date mCustomStartingDate;
 
-    public static void Call(Context context){
+    static void Call(Context context){
         Intent numberToCall = new Intent(Intent.ACTION_CALL);
         //TODO: Update this to the actual phone number
         numberToCall.setData(Uri.parse("tel:" + String.valueOf(CallbackHelper.GetCallbackServerMediator().GetPhoneNumberForDepartment("Fraud"))));
@@ -56,46 +56,81 @@ public class CallbackHelper {
         context.startActivity(numberToCall);
     }
 
-    public static String GetDepartmentName(int index,Context context){
+    static void DisplayYesNoDialogForCancelCallback(final Context context, String title, String message){
+        final AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(context);
+        }
+        builder.setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        CallbackHelper.CancelCallback();
+                        CallbackHelper.TransferToMainQuestions(builder.getContext());
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Do nothing, Do not want to cancel callback.
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    static String GetDepartmentName(int index, Context context){
         String[] listOfDepartments = context.getResources().getStringArray(R.array.ListOfDepartments);
         return listOfDepartments[index];
     }
 
-    public static void TransferToConformationTimeActivity(Context context, String department){
+    static void TransferToConformationTimeActivity(Context context, String department){
         Intent callbackScheduleActivity = new Intent(context.getApplicationContext(), CallbackConformationTimeActivity.class);
         callbackScheduleActivity.putExtra("KeyBank.CallbackConformationActivity.DEPARTMENT", department);
         context.startActivity(callbackScheduleActivity);
     }
 
-    public static void TransferToConformationActivity(Context context, String department){
+    static void TransferToConformationActivity(Context context, String department){
         Intent callbackScheduleActivity = new Intent(context.getApplicationContext(), CallbackConformationActivity.class);
         callbackScheduleActivity.putExtra("KeyBank.CallbackConformationActivity.DEPARTMENT", department);
         context.startActivity(callbackScheduleActivity);
     }
 
-    public static void TransferToSuggestionScheduler(Context context, String department){
+    static void TransferToSuggestionScheduler(Context context, String department){
         Intent SuggestionScheduler = new Intent(context.getApplicationContext(), CallbackSuggestionScheduler.class);
         SuggestionScheduler.putExtra("KeyBank.CallbackConformationActivity.DEPARTMENT", department);
         context.startActivity(SuggestionScheduler);
     }
 
-    public static void TransferToTimeScheduler(Context context, String department){
+    static void TransferToTimeScheduler(Context context, String department){
         Intent CallbackScheduleActivityTime = new Intent(context.getApplicationContext(), CallbackScheduleActivityTime.class);
         CallbackScheduleActivityTime.putExtra("KeyBank.CallbackConformationActivity.DEPARTMENT", department);
         context.startActivity(CallbackScheduleActivityTime);
     }
 
-    public static void TransferToCustomScheduler(Context context, String department){
+    static void TransferToCustomScheduler(Context context, String department){
         Intent SuggestionScheduler = new Intent(context.getApplicationContext(), CallbackScheduleActivity.class);
         SuggestionScheduler.putExtra("KeyBank.CallbackConformationActivity.DEPARTMENT", department);
         context.startActivity(SuggestionScheduler);
     }
 
-    public static String GetLocalTimeZone(){
+    private static void TransferToMainQuestions(Context context){
+        Intent SuggestionScheduler = new Intent(context.getApplicationContext(), CallbackQuestionsActivity.class);
+        context.startActivity(SuggestionScheduler);
+    }
+
+    private static void CancelCallback(){
+        //Cancel the callback in the server.
+        CallbackServerMediator.CancelCallback();
+    }
+
+    static String GetLocalTimeZone(){
         return "EST";
     }
 
-    public static Date GetNextAvailableDayForDepartment(String department){
+    static Date GetNextAvailableDayForDepartment(String department){
         //Returns the opening time and day available for the department.
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
         Date date = GetNextAvailableTimeForDepartment(department);
@@ -104,11 +139,11 @@ public class CallbackHelper {
         return cal.getTime();
     }
 
-    public static Date GetNextAvailableTimeForDepartment(String department){
+    static Date GetNextAvailableTimeForDepartment(String department){
         return mCallbackServerMediator.GetNextAvailableTime(department);
     }
 
-    public static String FormatSuggestedTimeString(String day, int hour, int minute){
+    private static String FormatSuggestedTimeString(String day, int hour, int minute){
         String amPm = "AM";
         if(hour > 12){
             hour = hour - 12;
@@ -117,10 +152,10 @@ public class CallbackHelper {
         String minuteString;
         minuteString = String.format("%02d", minute);
 
-        return String.format(day + " at " + String.valueOf(hour) + ":" + minuteString + " " + amPm);
+        return day + " at " + String.valueOf(hour) + ":" + minuteString + " " + amPm;
     }
 
-    public static Calendar GetSuggestedCalendar(Context context, int suggestedIndex, String department){
+    static Calendar GetSuggestedCalendar(Context context, int suggestedIndex, String department){
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
         //This will return the date as if it's set for today.
         Date date = new Date();
@@ -135,7 +170,7 @@ public class CallbackHelper {
         return cal;
     }
 
-    public static int GetHoursInDayIncrementsFromDates(Date dateOfInterest, Date dateNextAvailable){
+    private static int GetHoursInDayIncrementsFromDates(Date dateOfInterest, Date dateNextAvailable){
         //Subtract 1 millisecond so that if the times are identical, then make sure it gets the correct "next day"
         long difference = Math.abs(dateOfInterest.getTime() - dateNextAvailable.getTime()) - 100;
         long differenceDates = difference / (24 * 60 * 60 * 1000);
@@ -143,7 +178,7 @@ public class CallbackHelper {
         return (differenceDay + 1) * 24;
     }
 
-    public static int GetSuggestedHour(Context context, int suggestedIndex){
+    private static int GetSuggestedHour(Context context, int suggestedIndex){
         int returnItem;
         Resources resources = context.getResources();
 
@@ -159,7 +194,7 @@ public class CallbackHelper {
         }
         return returnItem;
     }
-    public static int GetSuggestedMinute(Context context, int suggestedIndex){
+    private static int GetSuggestedMinute(Context context, int suggestedIndex){
         int returnItem;
         Resources resources = context.getResources();
 
@@ -176,32 +211,32 @@ public class CallbackHelper {
         return returnItem;
     }
 
-    public static String GetSuggestedTimeString(Date date) {
+    static String GetSuggestedTimeString(Date date) {
         return FormatSuggestedTimeString(GetDayStringFromDate(date),date.getHours(), date.getMinutes());
     }
 
-    public static String GetTimeStringFromDate(Date date){
+    static String GetTimeStringFromDate(Date date){
         SimpleDateFormat df = new SimpleDateFormat("h:mm a");
         return df.format(date.getTime());
     }
 
-    public  static  String GetDayStringFromDate(Date date){
+    static  String GetDayStringFromDate(Date date){
         //TODO differentiate from today/tomorrow/different day
         return (String) DateFormat.format("EEEE", date);
     }
-    public static void InitializeServerMediator(){
+    static void InitializeServerMediator(){
         mCallbackServerMediator = new CallbackServerMediator("CallbackServer");
     }
 
-    public static CallbackServerMediator GetCallbackServerMediator(){
+    static CallbackServerMediator GetCallbackServerMediator(){
         return mCallbackServerMediator;
     }
 
-    public static void SetupStartingDateForCustomScheduler(Date date){
+    static void SetupStartingDateForCustomScheduler(Date date){
         mCustomStartingDate = date;
     }
 
-    public static Date GetCustomStartingDate(){
+    static Date GetCustomStartingDate(){
         return mCustomStartingDate;
     }
 }

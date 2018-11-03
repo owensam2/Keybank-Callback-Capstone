@@ -3,6 +3,7 @@
 
     <string-array name="ListOfQuestions">
         <item>Fraudulent Activity Help</item>
+        <item>Forgot Password</item>
         <item>Account Balance Help</item>
         <item>Loan Help</item>
         <item>Investment Help</item>
@@ -10,6 +11,7 @@
 
     <string-array name="ListOfDepartments">
         <item>Fraudulent Team</item>
+        <item>Password Help</item>
         <item>Customer Service</item>
         <item>Loan Department</item>
         <item>Investment Services</item>
@@ -56,17 +58,26 @@
     <string name="There_is_currently_no_wait">There is currently no wait</string>
     <string name="minutes">Minutes</string>
     <string name="at_1_00_pm">Today at 1:00:PM</string>
-    <string name="at_8_30_am">Today at 8:30 AM</string>
+    <string name="at_8_30_am">Today at 9:00 AM</string>
     <string name="at_4_30_pm">Today at 4:30 PM</string>
     <string name="today">Today </string>
     <string name="tomorrow">Tomorrow </string>
     <string name="saturday">Saturday </string>
     <string name="monday">Monday</string>
-    <string name="custom">Custom</string>
+    <string name="custom">Or Another Time</string>
     <string name="schedule_callback">Schedule Callback</string>
+    <string name="callback_scheduler">Callback Scheduler</string>
+    <string name="done">Done</string>
+    <string name="question_to_user">Question to user</string>
+    <string name="assigned_department">Assigned Department</string>
+    <string name="estimated_callback_time">Estimated Callback Time:</string>
+    <string name="_12_00_pm">12:00 PM</string>
+    <string name="main_menu">Main Menu</string>
+    <string name="cancel_callback">Cancel Callback</string>
+    <string name="wish_to_cancel_callback">Do you wish to cancel callback?</string>
 
-    <integer name="FirstSuggestedTimeHour">8</integer>
-    <integer name="FirstSuggestedTimeMinute">30</integer>
+    <integer name="FirstSuggestedTimeHour">9</integer>
+    <integer name="FirstSuggestedTimeMinute">00</integer>
     <integer name="SecondSuggestedTimeHour">13</integer>
     <integer name="SecondSuggestedTimeMinute">00</integer>
     <integer name="ThirdSuggestedTimeHour">16</integer>
