@@ -227,7 +227,7 @@ public class CallbackHelper {
     }
     static void InitializeServerMediator(Context context){
         Resources resources = context.getResources();
-        mCallbackServerMediator = new CallbackServerMediator(resources.getString(R.string.server_connection));
+        mCallbackServerMediator = new CallbackServerMediator(resources.getString(R.string.server_connection), context.getResources());
     }
 
     static CallbackServerMediator GetCallbackServerMediator(){

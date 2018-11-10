@@ -1,9 +1,7 @@
 package com.example.mmarf.keybankcallback;
 
+import android.content.res.Resources;
 import android.os.AsyncTask;
-import android.util.Log;
-
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,39 +12,40 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutionException;
 
 class CallbackServerMediator {
-    private String mServerInfo;
+    private String mConnectionURL = null;
+    private boolean isConnected = true;
     private Date mCallbackDate;
-    private boolean mWaitForReponse = false;
-    private int mTimoutMs = 1000; //Timeout to wait for response
+    private Resources mResources;
     private static final String UserID = "AndroidUser1";
 
-    CallbackServerMediator(String serverInfo){
-        mServerInfo = serverInfo;
-        new AsyncConnectToServer().execute("http://ceclnx01.cec.miamioh.edu:2020/QUEUE_TIME");
+    CallbackServerMediator(String serverInfo, Resources resources){
+        mConnectionURL = serverInfo;
+        mResources = resources;
+        //String returnItem = SendCommandReceiveResponse(serverInfo);
+        String returnItem = SendCommandReceiveResponse("http://ceclnx01.cec.miamioh.edu:2020/QUEUE_TIME");
+        if(returnItem != null){
+            isConnected = true;
+        }
     }
 
-    public String GetServerResponse(){
+    private String SendCommandReceiveResponse(String command){
         String returnItem = null;
-        Date startTime = Calendar.getInstance().getTime();
-        long diffInMs;
+        AsyncTask task = new AsyncConnectToServer().execute(command);
         try {
-            do{
-                Date currentTime = Calendar.getInstance().getTime();
-                diffInMs = startTime.getTime() - currentTime.getTime();
-                
-            }while (diffInMs < mTimoutMs);
-        }
-        finally {
-            mWaitForReponse = false;
+            returnItem = (String)task.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         return returnItem;
     }
 
     private String ConnectToServer(String connectionURL){
-        String returnItem = "";
+        String returnItem = null;
         try {
             HttpURLConnection connection = null;
             URL url = null;
@@ -74,13 +73,26 @@ class CallbackServerMediator {
     }
 
     Date GetNextAvailableTime(String department){
-        //TODO Get date of next available from server
+        if(isConnected){
+            mResources.getString(R.string.server_next_queue_time);
+        }
+        else{
+            return GetOfflineNextAvailableTime(department);
+        }
         return GetOfflineNextAvailableTime(department);
     }
 
     int GetEstimatedTimeRemaining(String department){
-        //TODO Get time
-        return GetOfflineTime(department);
+        int queueTime = 0;
+        if(isConnected){
+            String returnItem = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_queue_time));
+            returnItem = returnItem.replaceAll("\\D+","");
+            queueTime = Integer.valueOf(returnItem);
+        }
+        else {
+            queueTime = GetOfflineTime(department);
+        }
+        return queueTime;
     }
 
     String GetPhoneNumberForDepartment(String department){
@@ -135,18 +147,11 @@ class CallbackServerMediator {
         return "8005392968";
     }
 
-    public class AsyncConnectToServer extends AsyncTask<String,String,String>{
+    private class AsyncConnectToServer extends AsyncTask<String,String,String>{
         @Override
         protected String doInBackground(String... strings) {
-            String returnItem;
-            returnItem = ConnectToServer(strings[0]);
+            String returnItem = ConnectToServer(strings[0]);
             return returnItem;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-
         }
     }
 }
