@@ -73,21 +73,22 @@ class CallbackServerMediator {
     }
 
     Date GetNextAvailableTime(String department){
+        Date returnDate = null;
         if(isConnected){
-            mResources.getString(R.string.server_next_queue_time);
+            String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_next_queue_time));
+            returnDate = ConvertIntToDate(ConvertStringToInt(response));
         }
         else{
-            return GetOfflineNextAvailableTime(department);
+            returnDate = GetOfflineNextAvailableTime(department);
         }
-        return GetOfflineNextAvailableTime(department);
+        return returnDate;
     }
 
     int GetEstimatedTimeRemaining(String department){
-        int queueTime = 0;
+        int queueTime;
         if(isConnected){
-            String returnItem = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_queue_time));
-            returnItem = returnItem.replaceAll("\\D+","");
-            queueTime = Integer.valueOf(returnItem);
+            String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_queue_time));
+            queueTime = ConvertStringToInt(response);
         }
         else {
             queueTime = GetOfflineTime(department);
@@ -145,6 +146,33 @@ class CallbackServerMediator {
     }
     private String GetOfflinePhoneNumber(){
         return "8005392968";
+    }
+
+    private int ConvertStringToInt(String value){
+        if(value == null){
+            return 0;
+        }
+        value = value.replaceAll("\\D+","");
+        return Integer.valueOf(value);
+    }
+
+    private Date ConvertIntToDate(int integerDate){
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
+        if(integerDate == 0){
+            return cal.getTime();
+        }
+        Date date = new Date();
+        String dateString = String.valueOf(integerDate);
+        if(dateString.length() < 3){
+            return cal.getTime();
+        }
+        String minute = dateString.substring(dateString.length()-2, dateString.length());
+        String hour = dateString.replace(minute, "");
+        date.setHours(Integer.valueOf(hour));
+        date.setMinutes(Integer.valueOf(minute));
+        date.setSeconds(0);
+        cal.setTime(date);
+        return cal.getTime();
     }
 
     private class AsyncConnectToServer extends AsyncTask<String,String,String>{

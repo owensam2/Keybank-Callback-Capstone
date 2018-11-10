@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,7 +23,7 @@ public class CallbackQuestionsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_callback_questions);
         CallbackHelper.InitializeServerMediator(CallbackQuestionsActivity.this);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Resources resources = getResources();
         CallbackQuestionsListView = findViewById(R.id.CallbackQuestionsListView);
         ListOfQuestions = resources.getStringArray(R.array.ListOfQuestions);
@@ -47,5 +48,15 @@ public class CallbackQuestionsActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

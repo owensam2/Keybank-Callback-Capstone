@@ -85,6 +85,8 @@
     <string name="server_callback_time_server_add_id">CALLBACK_TIME id=</string>
     <string name="server_callback_remove_add_id">REMOVE id=</string>
     <string name="server_show">SHOW</string>
+    <string name="i_need_help">I need help</string>
+    <string name="keybank_main">KeyBank Main</string>
 
     <integer name="FirstSuggestedTimeHour">9</integer>
     <integer name="FirstSuggestedTimeMinute">00</integer>

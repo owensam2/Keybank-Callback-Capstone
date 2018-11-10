@@ -87,6 +87,11 @@ public class CallbackHelper {
         return listOfDepartments[index];
     }
 
+    static void TransferToQuestionsActivity(Context context){
+        Intent callbackQuestionsActivity = new Intent(context.getApplicationContext(), CallbackQuestionsActivity.class);
+        context.startActivity(callbackQuestionsActivity);
+    }
+
     static void TransferToConformationTimeActivity(Context context, String department){
         Intent callbackScheduleActivity = new Intent(context.getApplicationContext(), CallbackConformationTimeActivity.class);
         callbackScheduleActivity.putExtra("KeyBank.CallbackConformationActivity.DEPARTMENT", department);
