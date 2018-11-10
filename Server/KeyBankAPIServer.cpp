@@ -47,7 +47,7 @@ const std::string ERROR = "500 Internal Server Error";
 class callerNode {
     
 public:
-    std::string id, day, hour, min;
+    std::string id, day, hour, min, time;
     
     callerNode(std::string id = "null",
     std::string day = "0", std::string hour = "0", std::string min = "0")
@@ -56,6 +56,7 @@ public:
         this->day = day;
         this->hour = hour;
         this->min = min;
+        this->time = day+"_"+hour+"_"+min;
     }
     
     ~callerNode()
@@ -67,14 +68,46 @@ public:
 //Customer Node Variables
 std::queue<callerNode> callQueue;
 std::vector<callerNode> callBackVec;
+//Caller center hours
+const int openTime = 8; //8am
+const int closeTime = 17; //5pm
+
+std::string callQueueVisual = "[Test 1] - [Test 2] - [Test 3]";
 
 //Functions Related to the Queue
+
+//Show a visual of the queues (both callQueue and callBackVec)
+std::string showQueues() {
+    std::string callBackVecVisual;
+    if(callBackVec.empty()) {
+        callBackVecVisual = "No scheduled callbacks.";
+    } else {
+        for (int i = 0; i < callBackVec.size(); i++) {
+            if (i == 0) {
+                callBackVecVisual = "[ID:" + callBackVec[i].id + "  Time: " + 
+                        callBackVec[i].day + "_" + callBackVec[i].hour 
+                        + "_" + callBackVec[i].min + "]";
+            } else {
+                callBackVecVisual = callBackVecVisual + 
+                        " - [ID:" + callBackVec[i].id + "  Time: " + 
+                        callBackVec[i].day + "_" + callBackVec[i].hour 
+                        + "_" + callBackVec[i].min + "]";
+            }
+        }
+    }
+    
+    std::string show = "On Hold Queue: ";
+    show = show + "\n" + callQueueVisual + "\n" + "\n";
+    show = show + "Callback Queue:" + "\n" + callBackVecVisual;
+    return show;
+}
 
 //Get the Next Caller in the Queue
 callerNode getFirst() {
     return callQueue.front();
 }
 
+//Get newest Caller in Queue
 callerNode getBack() {
     return callQueue.back();
 }
@@ -91,12 +124,11 @@ int getQueueTime() {
 std::string addCaller(std::string id) {
     callerNode newCaller(id);
     callQueue.push(newCaller);
-    return "Successfully Added " + id + " to the queue!"; 
+    callQueueVisual = callQueueVisual + " - [" + id + "]";
+    return std::to_string(0); 
 }
 
 std::string nextQueueTime() {
-    const int openTime = 7; //8am
-    const int closeTime = 16; //5pm
     std::string queueTime;
     
     std::time_t t = std::time(0);
@@ -106,26 +138,53 @@ std::string nextQueueTime() {
     if(now->tm_hour >= closeTime || now->tm_hour < openTime) {
         if(now->tm_hour < openTime) {
         queueTime = std::to_string(now->tm_wday) + " "
-                + std::to_string(openTime);
+                + std::to_string(openTime) + " 0";
         } else {
-            queueTime = std::to_string(now->tm_wday + 1) + " "
-                + std::to_string(openTime);
+            if(now->tm_wday == 5) {
+                queueTime = std::to_string(1) + " "
+                    + std::to_string(openTime) + " 0";
+            } else {
+                queueTime = std::to_string(now->tm_wday + 1) + " "
+                    + std::to_string(openTime) + " 0";
+            }
         }
     } //if the end of the queue is past business hours
     else if(now->tm_hour == (closeTime-1) && now->tm_min > getQueueTime()) {
         if(now->tm_hour < openTime) {
         queueTime = std::to_string(now->tm_wday) + " "
-                + std::to_string(openTime);
+                + std::to_string(openTime) + " 0";
         } else {
-            queueTime = std::to_string(now->tm_wday + 1) + " "
-                + std::to_string(openTime);
+            if(now->tm_wday == 5) {
+                queueTime = std::to_string(1) + " "
+                    + std::to_string(openTime) + " 0";
+            } else {
+                queueTime = std::to_string(now->tm_wday + 1) + " "
+                    + std::to_string(openTime) + " 0";
+            }
         }
     } //if the end of the queue is within business hours
     else {
-        queueTime = std::to_string(now->tm_hour) 
-                + std::to_string(getQueueTime());
+        int hour = now->tm_hour;
+        int min = now->tm_min + getQueueTime();
+        if(min > 59){
+            min = min-60;
+            hour = hour+1;
+        }
+        queueTime =  std::to_string(now->tm_wday) + " " + std::to_string(hour) + " "
+                + std::to_string(min);
     }
     return queueTime;
+}
+
+//remove a person from queue
+std::string remove(std::string id) {
+    for (int i = 0; i < callBackVec.size(); i++) {
+        if(callBackVec[i].id == id) {
+            callBackVec.erase(callBackVec.begin() + i);
+            return "0";
+        }
+    }
+    return "1";
 }
 
 std::string callback(std::string request) {
@@ -142,23 +201,64 @@ std::string callback(std::string request) {
     //get min from request 
     min = request.substr(minLoc + 4, request.size() - minLoc);
     
+    time = day + " " + hour + " " + min;
+    
+    std::string error = "";
+    
+    bool validTime = true;
+    while(validTime){
+        validTime = false;
+        for (int i = 0; i < callBackVec.size(); i++) {
+            if(time == callBackVec[i].time) {
+                min = std::to_string(std::stoi(min) + 5);
+                time = day + "_" + hour + "_" + min;
+                validTime = true;
+                error = "1" + time;
+                error = error + "\n";
+                return error;
+            }
+        }
+    }
+    
     callerNode node(id, day, hour, min);
     callBackVec.push_back(node);
     
-    time = day + "_" + hour + "_" + min;
-    
-    return "Scheduled a Callback for " + id + " at " + time;
+    return "0 " + time;
 }
 
 std::string getCallbackTime(std::string id) {
     std::string time = "Cannot Find Callback";
     for (int i = 0; i < callBackVec.size(); i++) {
         if (callBackVec[i].id == id) {
-            time = callBackVec[i].day + "_" + callBackVec[i].hour 
-                    + "_" + callBackVec[i].min;
+            time = callBackVec[i].day + " " + callBackVec[i].hour 
+                    + " " + callBackVec[i].min;
         }
     }
     return time;
+}
+
+std::string getDays() {
+    std::time_t t = std::time(0);
+    std::tm* now = std::localtime(&t);
+    
+    std::string days;
+    
+    if(now->tm_wday == 6 || now->tm_wday == 0 || (now->tm_wday == 5 && now->tm_hour > closeTime)) {
+        days = std::to_string(1) + " " + std::to_string(2);
+    } else if(now->tm_hour > closeTime) {
+        if(now->tm_wday == 4){
+            days = std::to_string(5) + " " + std::to_string(1);
+        } else {
+            days = std::to_string(now->tm_wday+1) + " " + std::to_string(now->tm_wday+2);
+        }
+    } else {
+        if(now->tm_wday == 5){
+            days = std::to_string(5) + " " + std::to_string(1);
+        } else {
+            days = std::to_string(now->tm_wday) + " " + std::to_string(now->tm_wday+1);
+        }
+    }
+    return days;
 }
 
 void cycleQueue() {
@@ -173,12 +273,16 @@ void cycleQueue() {
     while(true) {
         timePassed = difftime(time(0), beginTime);
         if(timePassed > cycleTime) {
-            std::string id = "Test " + (std::to_string(testNum));
-            addCaller(id);
-            testNum++;
+                if(getQueueTime() <= 15) {
+                std::string id = "Test " + (std::to_string(testNum));
+                addCaller(id);
+                testNum++;
+            }
             std::cout << "Queue Cycled" << std::endl;
             callQueue.pop();
             beginTime = time(0);
+            int loc = callQueueVisual.find("]");
+            callQueueVisual = callQueueVisual.substr(loc+4);
         }
         
         std::time_t t = std::time(0);
@@ -225,6 +329,7 @@ std::string processRequest(ConstStr type, ConstStr request) {
     size_t fAdd = request.find("/ADD_QUEUE");
     size_t fCallback = request.find("/CALLBACK&");
     size_t fCallbackTime = request.find("/CALLBACK_TIME");
+    size_t fRemove = request.find("/REMOVE");
     
     code = OK;
     
@@ -240,15 +345,30 @@ std::string processRequest(ConstStr type, ConstStr request) {
      * Full command list:
      * 
      * "/QUEUE_TIME" - Get the estimated wait time in minutes
-     * "/ADD_QUEUE" - Add a user to the queue immediately 
+     *      Returns time in minutes
+     * "/ADD_QUEUE" - Add a user to the on-hold queue immediately 
      *      Requires id
+     *      Returns 0 if successful
      * "/NEXT_QUEUE_TIME" - Get the estimated next available time someone can
      *                      be added to the queue
+     *      Returns time in D HH MM
      * "/CALLBACK" - schedule a user to be called back at a specific time
      *      Requires id, day, hour, min
+     *      Returns '0 D HH MM' if successful
+     *              if time slot was full, returns '1 D HH MM' 
      * "/CALLBACK_TIME" - check the time of a user in the callback queue
      *                      based on their id
      *      Requires id
+     *      Returns time as D HH MM
+     * "/REMOVE" - removes a user scheduled for callback based on their id
+     *      Requires id
+     *      Returns 0 if successful, otherwise return 1
+     * "/NEXT_QUEUE_DAYS" - Get the next two days available to queue in as ints.
+     *                      EX. if today is Friday night, the ints returned are
+     *                      "1 2" for Monday and Tuesday. Days are 0-6 from Sunday to Saturday 
+     *      Returns days as D D
+     * "/SHOW" - shows both queues
+     *      Returns a visual representaion of the queues
      * "/GET_FRONT" - returns the id of the next user in queue (for testing)
      * "/GET_BACK" - returns the id of the last user in queue (for testing)     
      */
@@ -268,22 +388,40 @@ std::string processRequest(ConstStr type, ConstStr request) {
         message = nextQueueTime();
     } //Schedule a callback 
     else if(fCallback != std::string::npos) {
-        //full request should be in '/CALLBACK&id=<id>&day=<day>&hour=<hour>&min=<min>
+        //full request should be in 
+        //          '/CALLBACK&id=<id>&day=<day>&hour=<hour>&min=<min>
         //day is any int 0-6, 0 being sunday and 6 being saturday
         //hour is any int 0-23, 0 being midnight
         //min should be any int 0-59, 0 being the top of the hour
                
         message = callback(request);
-    } else if(fCallbackTime != std::string::npos) {
+    } // Get time of scheduled callback
+    else if(fCallbackTime != std::string::npos) {
         //full request should be '/CALLBACK_TIME&id=<id>'
         int idLoc = request.find("id=");
         std::string id = request.substr(idLoc + 3, request.size() - idLoc);
         message = getCallbackTime(id);
     }
-    // Get Next Person in Queue (mostly for testing purposes
+    // Remove a scheduled callback
+    else if(fRemove != std::string::npos) {
+        //full request should be '/REMOVE&id=<id>'
+        int idLoc = request.find("id=");
+        std::string id = request.substr(idLoc + 3, request.size() - idLoc);
+        message = remove(id);
+    }
+    // Return next available days to queue
+    else if (request == "/NEXT_QUEUE_DAYS") {
+        message = getDays();
+    }
+    // Show queues in a visual form 
+    else if (request == "/SHOW") {
+        message = showQueues();
+    }
+    // Get Next Person in Queue (mostly for testing purposes)
     else if(request == "/GET_FIRST") {
         message = getFirst().id;
     }
+    // Get newest person in Queue (mostly for testing purposes)
     else if(request == "/GET_BACK") {
         message = getBack().id;
     } else {
