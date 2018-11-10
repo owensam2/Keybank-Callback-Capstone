@@ -1,22 +1,76 @@
 package com.example.mmarf.keybankcallback;
 
+import android.os.AsyncTask;
+import android.util.Log;
+
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 class CallbackServerMediator {
     private String mServerInfo;
     private Date mCallbackDate;
-    private String mCallbackDepartment;
+    private boolean mWaitForReponse = false;
+    private int mTimoutMs = 1000; //Timeout to wait for response
+    private static final String UserID = "AndroidUser1";
 
     CallbackServerMediator(String serverInfo){
         mServerInfo = serverInfo;
-        ConnectToServer();
+        new AsyncConnectToServer().execute("http://ceclnx01.cec.miamioh.edu:2020/QUEUE_TIME");
     }
 
-    private void ConnectToServer(){
-        //TODO Connect
+    public String GetServerResponse(){
+        String returnItem = null;
+        Date startTime = Calendar.getInstance().getTime();
+        long diffInMs;
+        try {
+            do{
+                Date currentTime = Calendar.getInstance().getTime();
+                diffInMs = startTime.getTime() - currentTime.getTime();
+                
+            }while (diffInMs < mTimoutMs);
+        }
+        finally {
+            mWaitForReponse = false;
+        }
+        return returnItem;
+    }
 
+    private String ConnectToServer(String connectionURL){
+        String returnItem = "";
+        try {
+            HttpURLConnection connection = null;
+            URL url = null;
+            url = new URL(connectionURL);
+            connection = (HttpURLConnection) url.openConnection();
+            try {
+                BufferedReader bufferedReader = new BufferedReader(
+                        new InputStreamReader(connection.getInputStream()));
+                StringBuilder stringBuilder = new StringBuilder();
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(line).append("\n");
+                }
+                bufferedReader.close();
+                returnItem = stringBuilder.toString();
+            } finally {
+                connection.disconnect();
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return returnItem;
     }
 
     Date GetNextAvailableTime(String department){
@@ -36,7 +90,6 @@ class CallbackServerMediator {
 
     void SetCallbackTime(Date date, String department){
         //TODO: Send callback time to server
-        mCallbackDepartment = department;
         mCallbackDate = date;
     }
 
@@ -80,5 +133,20 @@ class CallbackServerMediator {
     }
     private String GetOfflinePhoneNumber(){
         return "8005392968";
+    }
+
+    public class AsyncConnectToServer extends AsyncTask<String,String,String>{
+        @Override
+        protected String doInBackground(String... strings) {
+            String returnItem;
+            returnItem = ConnectToServer(strings[0]);
+            return returnItem;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+        }
     }
 }

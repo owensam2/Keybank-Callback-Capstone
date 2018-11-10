@@ -63,15 +63,16 @@ public class CallbackHelper {
         } else {
             builder = new AlertDialog.Builder(context);
         }
+        Resources resources = context.getResources();
         builder.setTitle(title)
                 .setMessage(message)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton(resources.getString(R.string.real_yes), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         CallbackHelper.CancelCallback();
                         CallbackHelper.TransferToMainQuestions(builder.getContext());
                     }
                 })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                .setNegativeButton(resources.getString(R.string.real_no), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //Do nothing, Do not want to cancel callback.
@@ -224,8 +225,9 @@ public class CallbackHelper {
         //TODO differentiate from today/tomorrow/different day
         return (String) DateFormat.format("EEEE", date);
     }
-    static void InitializeServerMediator(){
-        mCallbackServerMediator = new CallbackServerMediator("CallbackServer");
+    static void InitializeServerMediator(Context context){
+        Resources resources = context.getResources();
+        mCallbackServerMediator = new CallbackServerMediator(resources.getString(R.string.server_connection));
     }
 
     static CallbackServerMediator GetCallbackServerMediator(){

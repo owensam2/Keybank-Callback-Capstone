@@ -21,7 +21,7 @@ public class CallbackQuestionsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_callback_questions);
-        CallbackHelper.InitializeServerMediator();
+        CallbackHelper.InitializeServerMediator(CallbackQuestionsActivity.this);
 
         Resources resources = getResources();
         CallbackQuestionsListView = findViewById(R.id.CallbackQuestionsListView);
