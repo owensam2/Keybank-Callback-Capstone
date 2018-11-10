@@ -32,15 +32,23 @@ class CallbackServerMediator {
     }
 
     private String SendCommandReceiveResponse(String command){
+        int maxTries = 10;
+        int tries = 0;
+        boolean done = false;
         String returnItem = null;
-        AsyncTask task = new AsyncConnectToServer().execute(command);
-        try {
-            returnItem = (String)task.get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        do{
+            AsyncTask task = new AsyncConnectToServer().execute(command);
+            try {
+                returnItem = (String)task.get();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(returnItem != null)
+                done = true;
+            tries += 1;
+        }while (!done || tries < maxTries);
         return returnItem;
     }
 
