@@ -134,8 +134,11 @@ std::string nextQueueTime() {
     std::time_t t = std::time(0);
     std::tm* now = std::localtime(&t);
     
-    //if its not business hours
-    if(now->tm_hour >= closeTime || now->tm_hour < openTime) {
+    if(now->tm_wday == 6 || now->tm_wday == 0) {
+        queueTime = std::to_string(1) + " "
+                + std::to_string(openTime) + " 0";
+    } //if its not business hours
+    else if(now->tm_hour >= closeTime || now->tm_hour < openTime) {
         if(now->tm_hour < openTime) {
         queueTime = std::to_string(now->tm_wday) + " "
                 + std::to_string(openTime) + " 0";
