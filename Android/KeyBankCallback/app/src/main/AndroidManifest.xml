@@ -3,6 +3,7 @@
     package="com.example.mmarf.keybankcallback">
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -10,14 +11,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
         <activity android:name=".CallbackActivity" />
         <activity android:name=".CallbackQuestionsActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".CallbackConformationActivity" />
         <activity
@@ -27,6 +25,12 @@
         <activity android:name=".CallbackSuggestionScheduler" />
         <activity android:name=".CallbackConformationTimeActivity" />
         <activity android:name=".CallbackScheduleActivityTime" />
+        <activity android:name=".MainPageActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

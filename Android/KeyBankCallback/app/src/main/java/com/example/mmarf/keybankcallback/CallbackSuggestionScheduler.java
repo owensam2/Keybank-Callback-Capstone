@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -24,7 +25,7 @@ public class CallbackSuggestionScheduler extends AppCompatActivity {
         setContentView(R.layout.activity_callback_suggestion_scheduler);
         Intent intent = getIntent();
         mDepartment = intent.getStringExtra("KeyBank.CallbackConformationActivity.DEPARTMENT");
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.mButtonTimeRank1 = findViewById(R.id.buttonTimeRank1);
         this.mButtonTimeRank2 = findViewById(R.id.buttonTimeRank2);
         this.mButtonTimeRank3 = findViewById(R.id.buttonTimeRank3);
@@ -61,6 +62,17 @@ public class CallbackSuggestionScheduler extends AppCompatActivity {
             CallbackHelper.TransferToCustomScheduler(CallbackSuggestionScheduler.this, mDepartment);
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     void SetupButtonText(){

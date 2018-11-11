@@ -63,15 +63,16 @@ public class CallbackHelper {
         } else {
             builder = new AlertDialog.Builder(context);
         }
+        Resources resources = context.getResources();
         builder.setTitle(title)
                 .setMessage(message)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton(resources.getString(R.string.real_yes), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         CallbackHelper.CancelCallback();
                         CallbackHelper.TransferToMainQuestions(builder.getContext());
                     }
                 })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                .setNegativeButton(resources.getString(R.string.real_no), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //Do nothing, Do not want to cancel callback.
@@ -84,6 +85,11 @@ public class CallbackHelper {
     static String GetDepartmentName(int index, Context context){
         String[] listOfDepartments = context.getResources().getStringArray(R.array.ListOfDepartments);
         return listOfDepartments[index];
+    }
+
+    static void TransferToQuestionsActivity(Context context){
+        Intent callbackQuestionsActivity = new Intent(context.getApplicationContext(), CallbackQuestionsActivity.class);
+        context.startActivity(callbackQuestionsActivity);
     }
 
     static void TransferToConformationTimeActivity(Context context, String department){
@@ -224,8 +230,9 @@ public class CallbackHelper {
         //TODO differentiate from today/tomorrow/different day
         return (String) DateFormat.format("EEEE", date);
     }
-    static void InitializeServerMediator(){
-        mCallbackServerMediator = new CallbackServerMediator("CallbackServer");
+    static void InitializeServerMediator(Context context){
+        Resources resources = context.getResources();
+        mCallbackServerMediator = new CallbackServerMediator(resources.getString(R.string.server_connection), context.getResources());
     }
 
     static CallbackServerMediator GetCallbackServerMediator(){

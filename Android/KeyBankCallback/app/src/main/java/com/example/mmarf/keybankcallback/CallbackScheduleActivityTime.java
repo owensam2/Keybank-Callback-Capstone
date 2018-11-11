@@ -3,6 +3,8 @@ package com.example.mmarf.keybankcallback;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -11,7 +13,7 @@ import android.widget.TextView;
 
 import java.util.Date;
 
-public class CallbackScheduleActivityTime extends Activity {
+public class CallbackScheduleActivityTime extends AppCompatActivity {
     TextView mTextViewScheduleTodayTomorrow;
     Spinner mSpinnerHour;
     Spinner mSpinnerMinute;
@@ -23,7 +25,7 @@ public class CallbackScheduleActivityTime extends Activity {
         setContentView(R.layout.activity_callback_schedule_time);
         Intent intent = getIntent();
         mDepartment = intent.getStringExtra("KeyBank.CallbackConformationActivity.DEPARTMENT");
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //Get the day that we are starting from.
         this.mTextViewScheduleTodayTomorrow = findViewById(R.id.textViewScheduleTodayTomorrow);
         this.mSpinnerHour = findViewById(R.id.spinnerHour);
@@ -46,6 +48,17 @@ public class CallbackScheduleActivityTime extends Activity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void SetupLabel(){

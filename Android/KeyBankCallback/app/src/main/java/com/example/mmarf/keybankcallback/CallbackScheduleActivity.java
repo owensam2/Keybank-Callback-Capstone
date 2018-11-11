@@ -2,13 +2,12 @@ package com.example.mmarf.keybankcallback;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.Date;
-
-public class CallbackScheduleActivity extends Activity {
+public class CallbackScheduleActivity extends AppCompatActivity {
     private Button mButtonFirstDay;
     private Button mButtonSecondDay;
     private String mDepartment;
@@ -18,6 +17,7 @@ public class CallbackScheduleActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_callback_schedule);
         Intent intent = getIntent();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mDepartment = intent.getStringExtra("KeyBank.CallbackConformationActivity.DEPARTMENT");
         this.mButtonFirstDay = findViewById(R.id.buttonCallbackSchedulerFirstDay);
         this.mButtonSecondDay = findViewById(R.id.buttonCallbackSchedulerSecondDay);
@@ -38,6 +38,17 @@ public class CallbackScheduleActivity extends Activity {
                 CallbackHelper.TransferToTimeScheduler(CallbackScheduleActivity.this, mDepartment);
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void SetupButtons(String department){

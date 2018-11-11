@@ -3,6 +3,7 @@ package com.example.mmarf.keybankcallback;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ public class CallbackActivityNoWait extends AppCompatActivity {
         Button scheduleCallback = findViewById(R.id.buttonScheduleCallNoWait);
         Intent intent = getIntent();
         int index = intent.getIntExtra("KeyBank.CallbackActivity.ITEM_INDEX", -1);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mDepartment = CallbackHelper.GetDepartmentName(index, CallbackActivityNoWait.this);
         SetupUIItems(mDepartment);
@@ -36,10 +38,20 @@ public class CallbackActivityNoWait extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     void SetupUIItems(String department){
         //Get the desired department
         TextView textViewDepartment = findViewById(R.id.textViewDepartmentNoWait);
         textViewDepartment.setText(department);
     }
-
 }
