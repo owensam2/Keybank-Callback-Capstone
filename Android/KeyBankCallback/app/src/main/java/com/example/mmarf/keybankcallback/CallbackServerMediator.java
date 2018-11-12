@@ -16,10 +16,11 @@ import java.util.concurrent.ExecutionException;
 
 class CallbackServerMediator {
     private String mConnectionURL = null;
-    private boolean isConnected = true;
+    private boolean isConnected = false;
     private Date mCallbackDate;
     private Resources mResources;
     private static final String UserID = "AndroidUser1";
+    private static final int mTimeoutMs = 1000;
 
     CallbackServerMediator(String serverInfo, Resources resources){
         mConnectionURL = serverInfo;
@@ -48,7 +49,7 @@ class CallbackServerMediator {
             if(returnItem != null)
                 done = true;
             tries += 1;
-        }while (!done || tries < maxTries);
+        }while (!done && tries < maxTries);
         return returnItem;
     }
 
@@ -59,7 +60,10 @@ class CallbackServerMediator {
             URL url = null;
             url = new URL(connectionURL);
             connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(mTimeoutMs);
+            connection.connect();
             try {
+                isConnected = true;
                 BufferedReader bufferedReader = new BufferedReader(
                         new InputStreamReader(connection.getInputStream()));
                 StringBuilder stringBuilder = new StringBuilder();
