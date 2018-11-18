@@ -72,13 +72,17 @@ std::vector<callerNode> callBackVec;
 const int openTime = 8; //8am
 const int closeTime = 17; //5pm
 
-std::string callQueueVisual = "[Test 1] - [Test 2] - [Test 3]";
+std::string callQueueVisual = "[Test 1]\n[Test 2]\n[Test 3]";
 
 //Functions Related to the Queue
 
 //Show a visual of the queues (both callQueue and callBackVec)
 std::string showQueues() {
     std::string callBackVecVisual;
+    std::time_t t = std::time(0);
+    std::tm* now = std::localtime(&t);
+    std::string day = std::to_string(now->tm_wday), hour = std::to_string(now->tm_hour), min = std::to_string(now->tm_min);
+    
     if(callBackVec.empty()) {
         callBackVecVisual = "No scheduled callbacks.";
     } else {
@@ -89,7 +93,7 @@ std::string showQueues() {
                         + "_" + callBackVec[i].min + "]";
             } else {
                 callBackVecVisual = callBackVecVisual + 
-                        " - [ID:" + callBackVec[i].id + "  Time: " + 
+                        "\n[ID:" + callBackVec[i].id + "  Time: " + 
                         callBackVec[i].day + "_" + callBackVec[i].hour 
                         + "_" + callBackVec[i].min + "]";
             }
@@ -99,6 +103,7 @@ std::string showQueues() {
     std::string show = "On Hold Queue: ";
     show = show + "\n" + callQueueVisual + "\n" + "\n";
     show = show + "Callback Queue:" + "\n" + callBackVecVisual;
+    show = show + "\n\n\n" + "Time: \n" + day + "_" + hour + "_" + min;
     return show;
 }
 
@@ -124,7 +129,7 @@ int getQueueTime() {
 std::string addCaller(std::string id) {
     callerNode newCaller(id);
     callQueue.push(newCaller);
-    callQueueVisual = callQueueVisual + " - [" + id + "]";
+    callQueueVisual = callQueueVisual + "\n[" + id + "]";
     return std::to_string(0); 
 }
 
@@ -204,7 +209,7 @@ std::string callback(std::string request) {
     //get min from request 
     min = request.substr(minLoc + 4, request.size() - minLoc);
     
-    time = day + " " + hour + " " + min;
+    time = day + "_" + hour + "_" + min;
     
     std::string error = "";
     
@@ -216,7 +221,7 @@ std::string callback(std::string request) {
                 min = std::to_string(std::stoi(min) + 5);
                 time = day + "_" + hour + "_" + min;
                 validTime = true;
-                error = "1" + time;
+                error = "1 " + time;
                 error = error + "\n";
                 return error;
             }
@@ -285,7 +290,7 @@ void cycleQueue() {
             callQueue.pop();
             beginTime = time(0);
             int loc = callQueueVisual.find("]");
-            callQueueVisual = callQueueVisual.substr(loc+4);
+            callQueueVisual = callQueueVisual.substr(loc+2);
         }
         
         std::time_t t = std::time(0);

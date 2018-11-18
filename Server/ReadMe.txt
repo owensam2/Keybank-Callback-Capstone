@@ -27,7 +27,8 @@ Full command list:
      * "/CALLBACK" - schedule a user to be called back at a specific time
      *      Requires id, day, hour, min
      *      Returns '0 D HH MM' if successful
-     *              if time slot was full, returns '1 D HH MM' 
+     *              if time slot was full, returns '1 D HH MM' of next available time slot, does not
+			schedule a callback
      * "/CALLBACK_TIME" - check the time of a user in the callback queue
      *                      based on their id
      *      Requires id
