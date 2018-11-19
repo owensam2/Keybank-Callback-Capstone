@@ -19,15 +19,15 @@ class CallbackServerMediator {
     private boolean isConnected = false;
     private Date mCallbackDate;
     private Resources mResources;
-    private static final String UserID = "AndroidUser1";
+    private static final String mUserID = "AndroidUser1";
     private static final int mTimeoutMs = 1000;
 
     CallbackServerMediator(String serverInfo, Resources resources){
         mConnectionURL = serverInfo;
         mResources = resources;
-        //String returnItem = SendCommandReceiveResponse(serverInfo);
-        String returnItem = SendCommandReceiveResponse("http://ceclnx01.cec.miamioh.edu:2020/QUEUE_TIME");
-        if(returnItem != null){
+        //Try to get something from the server.
+        String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_next_queue_time));
+        if(response != null){
             isConnected = true;
         }
     }
@@ -88,7 +88,7 @@ class CallbackServerMediator {
         Date returnDate = null;
         if(isConnected){
             String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_next_queue_time));
-            returnDate = ConvertIntToDate(ConvertStringToInt(response));
+            returnDate = ConvertStringToDate(TrimString(response));
         }
         else{
             returnDate = GetOfflineNextAvailableTime(department);
@@ -100,7 +100,7 @@ class CallbackServerMediator {
         int queueTime;
         if(isConnected){
             String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_queue_time));
-            queueTime = ConvertStringToInt(response);
+            queueTime = Integer.valueOf(TrimString(response));
         }
         else {
             queueTime = GetOfflineTime(department);
@@ -114,13 +114,29 @@ class CallbackServerMediator {
     }
 
     void SetCallbackTime(Date date, String department){
-        //TODO: Send callback time to server
-        mCallbackDate = date;
+        String day = String.valueOf(date.getDay());
+
+        String timeBuilder = "&id=" + mUserID + "&day=" + String.valueOf(date.getDay()) + "&hour=" + String.valueOf(date.getHours()) + "&min=" + String.valueOf(date.getMinutes());
+        String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_schedule_callback_id_day_hour_minute)+timeBuilder);
+        //TODO: update this if getting a 1 back due to slot already filled?
+
+        try {
+            mCallbackDate = ConvertStringToDate(TrimString(response));
+        }
+        catch (java.lang.NumberFormatException e){
+            mCallbackDate = date;
+        }
     }
 
     Date GetCallbackTime(){
         //TODO: Get callback time from server
-        return mCallbackDate;
+        String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_callback_time_server_add_id) + "&id=" + mUserID);
+        try {
+            return ConvertStringToDate(TrimString(response));
+        }
+        catch (java.lang.NumberFormatException e){
+            return  mCallbackDate;
+        }
     }
 
     static void CancelCallback(){
@@ -160,30 +176,37 @@ class CallbackServerMediator {
         return "8005392968";
     }
 
-    private int ConvertStringToInt(String value){
+    private String TrimString(String value){
         if(value == null){
-            return 0;
+            return value;
         }
-        value = value.replaceAll("\\D+","");
-        return Integer.valueOf(value);
+        value = value.replaceAll("\n","");
+        return value;
     }
 
-    private Date ConvertIntToDate(int integerDate){
+    private Date ConvertStringToDate(String stringDate){
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
-        if(integerDate == 0){
+        if(stringDate.length() == 0){
             return cal.getTime();
         }
+        String stringDateArray[] = stringDate.split(" ");
         Date date = new Date();
-        String dateString = String.valueOf(integerDate);
-        if(dateString.length() < 3){
+        if(stringDateArray.length < 3){
             return cal.getTime();
         }
-        String minute = dateString.substring(dateString.length()-2, dateString.length());
-        String hour = dateString.replace(minute, "");
+        String minute = stringDateArray[2];
+        String hour = stringDateArray[1];
+        String day = stringDateArray[0];
         date.setHours(Integer.valueOf(hour));
         date.setMinutes(Integer.valueOf(minute));
         date.setSeconds(0);
+        int dayFromString = Integer.valueOf(stringDateArray[0]);
+        //If it's Saturday and the next available day is not Saturday, normalize the day
+        if(date.getDay() == 6 && dayFromString != 6)
+            dayFromString += 6;
+
         cal.setTime(date);
+        cal.add(Calendar.HOUR_OF_DAY, (dayFromString - date.getDay()) * 24);
         return cal.getTime();
     }
 
