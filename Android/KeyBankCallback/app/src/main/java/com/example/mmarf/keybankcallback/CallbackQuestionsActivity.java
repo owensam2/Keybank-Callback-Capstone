@@ -7,10 +7,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Switch;
 
 public class CallbackQuestionsActivity extends AppCompatActivity {
 
@@ -37,7 +34,7 @@ public class CallbackQuestionsActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 //Find out if there is a wait or not. This will determine which screen is chosen next.
-                if(CallbackHelper.GetCallbackServerMediator().GetEstimatedTimeRemaining(CallbackHelper.GetDepartmentName(position, CallbackQuestionsActivity.this)) > 0){
+                if(CallbackHelper.GetCallbackServerMediator().GetEstimatedMinutesOfQueue(CallbackHelper.GetDepartmentName(position, CallbackQuestionsActivity.this)) > 0){
                     Intent callbackActivity = new Intent(getApplicationContext(), CallbackActivity.class);
                     callbackActivity.putExtra("KeyBank.CallbackActivity.ITEM_INDEX", position);
                     startActivity(callbackActivity);

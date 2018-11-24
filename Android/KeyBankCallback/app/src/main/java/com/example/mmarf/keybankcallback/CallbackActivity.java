@@ -1,8 +1,6 @@
 package com.example.mmarf.keybankcallback;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -37,7 +35,7 @@ public class CallbackActivity extends AppCompatActivity {
         this.mButtonRequestCallback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddToQueue();
+                CallbackHelper.GetCallbackServerMediator().SetUserToNextAvailableCallback(mDepartment);
                 CallbackHelper.TransferToConformationActivity(CallbackActivity.this,mDepartment);
             }
         });
@@ -66,16 +64,12 @@ public class CallbackActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    void AddToQueue(){
-        CallbackHelper.GetCallbackServerMediator().AddToQueue();
-    }
-
     void SetupUIItems(String department){
         //Get the desired department
         TextView textViewDepartment = findViewById(R.id.textViewDepartment);
         textViewDepartment.setText(department);
         TextView textViewWaitMinutes =  findViewById(R.id.textViewWaitMinutes);
         textViewWaitMinutes.setText(mCalculating);
-        textViewWaitMinutes.setText(String.valueOf(CallbackHelper.GetCallbackServerMediator().GetEstimatedTimeRemaining(department)) + mMinutesText);
+        textViewWaitMinutes.setText(String.valueOf(CallbackHelper.GetCallbackServerMediator().GetEstimatedMinutesOfQueue(department)) + mMinutesText);
     }
 }

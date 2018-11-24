@@ -23,41 +23,62 @@ public class CallbackHelper {
 
     private static CallbackServerMediator mCallbackServerMediator;
     private static Date mCustomStartingDate;
+    private static boolean mDemoMode = true;
 
     static void Call(Context context){
         Resources resources = context.getResources();
         Intent numberToCall = new Intent(Intent.ACTION_CALL);
         //TODO: Update this to the actual phone number
         numberToCall.setData(Uri.parse("tel:" + String.valueOf(CallbackHelper.GetCallbackServerMediator().GetPhoneNumberForDepartment("Fraud"))));
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+        if(mDemoMode){
             AlertDialog.Builder builder;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert);
             } else {
                 builder = new AlertDialog.Builder(context);
             }
-            builder.setTitle(resources.getString(R.string.callback_not_supported_title))
-                    .setMessage(resources.getString(R.string.callback_not_supported_message))
+            GetCallbackServerMediator().AddToDemoQueue();
+            builder.setTitle("DEMO MODE")
+                    .setMessage("Added to calling queue")
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // continue with delete
                         }
                     })
-                    .setIcon(android.R.drawable.ic_dialog_alert);
-            AlertDialog dialog = builder.show();
-            TextView messageView = (TextView)dialog.findViewById(android.R.id.message);
-            messageView.setGravity(Gravity.CENTER);
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-
-            return;
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
         }
-        context.startActivity(numberToCall);
+        else{
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                AlertDialog.Builder builder;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert);
+                } else {
+                    builder = new AlertDialog.Builder(context);
+                }
+                builder.setTitle(resources.getString(R.string.callback_not_supported_title))
+                        .setMessage(resources.getString(R.string.callback_not_supported_message))
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // continue with delete
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert);
+                AlertDialog dialog = builder.show();
+                TextView messageView = (TextView)dialog.findViewById(android.R.id.message);
+                messageView.setGravity(Gravity.CENTER);
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+
+                return;
+            }
+            context.startActivity(numberToCall);
+        }
     }
 
     static void DisplayYesNoDialogForCancelCallback(final Context context, String title, String message){

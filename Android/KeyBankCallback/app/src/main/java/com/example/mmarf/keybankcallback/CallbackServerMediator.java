@@ -15,7 +15,7 @@ import java.util.TimeZone;
 import java.util.concurrent.ExecutionException;
 
 class CallbackServerMediator {
-    private String mConnectionURL = null;
+    private String mConnectionURL;
     private boolean isConnected = false;
     private Date mCallbackDate;
     private Resources mResources;
@@ -96,7 +96,19 @@ class CallbackServerMediator {
         return returnDate;
     }
 
-    int GetEstimatedTimeRemaining(String department){
+    Date GetServerTime(String department){
+        Date returnDate;
+        if(isConnected){
+            String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_time));
+            returnDate = ConvertStringToDate(TrimString(response));
+        }
+        else{
+            returnDate = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone())).getTime();
+        }
+        return returnDate;
+    }
+
+    int GetEstimatedMinutesOfQueue(String department){
         int queueTime;
         if(isConnected){
             String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_queue_time));
@@ -113,9 +125,31 @@ class CallbackServerMediator {
         return  GetOfflinePhoneNumber();
     }
 
-    void SetCallbackTime(Date date, String department){
-        String day = String.valueOf(date.getDay());
+    void SetUserToNextAvailableCallback(String department){
+        SetCallbackTime(GetNextAvailableTime(department), department);
+    }
 
+    int GetEstimatedMinutesOfScheduledCallback(String department){
+        Date queueTime;
+        int returnMinutes;
+        if(isConnected){
+            String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_callback_time_server_add_id)  + "&id=" + mUserID);
+            queueTime = ConvertStringToDate(TrimString(response));
+            Date currentServerTime = GetServerTime(department);
+            Calendar queueTimeCal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
+            Calendar currentTimeCal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
+            queueTimeCal.setTime(queueTime);
+            currentTimeCal.setTime(currentServerTime);
+            long milliSecDifference = queueTimeCal.getTimeInMillis() - currentTimeCal.getTimeInMillis();
+            returnMinutes = (int)(milliSecDifference / (60*1000));
+        }
+        else {
+            returnMinutes = GetOfflineTime(department);
+        }
+        return returnMinutes;
+    }
+
+    void SetCallbackTime(Date date, String department){
         String timeBuilder = "&id=" + mUserID + "&day=" + String.valueOf(date.getDay()) + "&hour=" + String.valueOf(date.getHours()) + "&min=" + String.valueOf(date.getMinutes());
         String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_schedule_callback_id_day_hour_minute)+timeBuilder);
         //TODO: update this if getting a 1 back due to slot already filled?
@@ -143,13 +177,13 @@ class CallbackServerMediator {
         //TODO Do something with the response?
     }
 
-    void AddToQueue(){
+    void AddToDemoQueue(){
         String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_add_queue_add_id) + "&id=" + mUserID);
     }
 
     private Date ConvertStringToDate(String stringDate){
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
-        if(stringDate.length() == 0){
+        if(stringDate == null || stringDate.length() == 0){
             return cal.getTime();
         }
         String stringDateArray[] = stringDate.split(" ");

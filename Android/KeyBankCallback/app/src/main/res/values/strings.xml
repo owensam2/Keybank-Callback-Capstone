@@ -84,6 +84,7 @@
     <string name="server_schedule_callback_id_day_hour_minute">CALLBACK</string>
     <string name="server_callback_time_server_add_id">CALLBACK_TIME</string>
     <string name="server_callback_remove_add_id">REMOVE</string>
+    <string name="server_time">SERVER_TIME</string>
     <string name="server_show">SHOW</string>
     <string name="i_need_help">I need help</string>
     <string name="keybank_main">KeyBank Main</string>

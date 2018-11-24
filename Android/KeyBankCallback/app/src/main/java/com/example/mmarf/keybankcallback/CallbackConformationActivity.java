@@ -58,6 +58,6 @@ public class CallbackConformationActivity extends AppCompatActivity {
     private  void SetupScreen(String department){
         //Get the desired department
         TextView textViewWaitMinutes2 = findViewById(R.id.textViewWaitMinutes2);
-        textViewWaitMinutes2.setText(String.valueOf(CallbackHelper.GetCallbackServerMediator().GetEstimatedTimeRemaining(department)));
+        textViewWaitMinutes2.setText(String.valueOf(CallbackHelper.GetCallbackServerMediator().GetEstimatedMinutesOfScheduledCallback(department)));
     }
 }
