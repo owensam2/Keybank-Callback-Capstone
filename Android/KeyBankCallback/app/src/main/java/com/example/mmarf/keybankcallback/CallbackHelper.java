@@ -11,6 +11,8 @@ import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.format.DateFormat;
+import android.view.Gravity;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -23,6 +25,7 @@ public class CallbackHelper {
     private static Date mCustomStartingDate;
 
     static void Call(Context context){
+        Resources resources = context.getResources();
         Intent numberToCall = new Intent(Intent.ACTION_CALL);
         //TODO: Update this to the actual phone number
         numberToCall.setData(Uri.parse("tel:" + String.valueOf(CallbackHelper.GetCallbackServerMediator().GetPhoneNumberForDepartment("Fraud"))));
@@ -33,16 +36,17 @@ public class CallbackHelper {
             } else {
                 builder = new AlertDialog.Builder(context);
             }
-            builder.setTitle("Call out not supported")
-                    .setMessage("Go to app settings and allow access to the phone.")
+            builder.setTitle(resources.getString(R.string.callback_not_supported_title))
+                    .setMessage(resources.getString(R.string.callback_not_supported_message))
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // continue with delete
                         }
                     })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-
+                    .setIcon(android.R.drawable.ic_dialog_alert);
+            AlertDialog dialog = builder.show();
+            TextView messageView = (TextView)dialog.findViewById(android.R.id.message);
+            messageView.setGravity(Gravity.CENTER);
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -92,6 +96,11 @@ public class CallbackHelper {
         context.startActivity(callbackQuestionsActivity);
     }
 
+    static void TransferToMainPage(Context context){
+        Intent mainPageActivity = new Intent(context.getApplicationContext(), MainPageActivity.class);
+        context.startActivity(mainPageActivity);
+    }
+
     static void TransferToConformationTimeActivity(Context context, String department){
         Intent callbackScheduleActivity = new Intent(context.getApplicationContext(), CallbackConformationTimeActivity.class);
         callbackScheduleActivity.putExtra("KeyBank.CallbackConformationActivity.DEPARTMENT", department);
@@ -129,7 +138,7 @@ public class CallbackHelper {
 
     private static void CancelCallback(){
         //Cancel the callback in the server.
-        CallbackServerMediator.CancelCallback();
+        mCallbackServerMediator.CancelCallback();
     }
 
     static String GetLocalTimeZone(){

@@ -22,9 +22,18 @@ public class CallbackConformationActivity extends AppCompatActivity {
         mResources = getResources();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Button cancelButton = findViewById(R.id.buttonCancelCallback);
+        Button mainMenuButton = findViewById(R.id.buttonHome);
+
+        mainMenuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CallbackHelper.TransferToMainPage(CallbackConformationActivity.this);
+            }
+        });
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                CancelCallback();
                 CallbackHelper.DisplayYesNoDialogForCancelCallback(CallbackConformationActivity.this, mResources.getString(R.string.cancel_callback), mResources.getString(R.string.wish_to_cancel_callback));
             }
         });
@@ -40,6 +49,11 @@ public class CallbackConformationActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void CancelCallback(){
+        CallbackHelper.GetCallbackServerMediator().CancelCallback();
+    }
+
 
     private  void SetupScreen(String department){
         //Get the desired department

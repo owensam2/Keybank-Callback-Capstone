@@ -37,6 +37,7 @@ public class CallbackActivity extends AppCompatActivity {
         this.mButtonRequestCallback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AddToQueue();
                 CallbackHelper.TransferToConformationActivity(CallbackActivity.this,mDepartment);
             }
         });
@@ -63,6 +64,10 @@ public class CallbackActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    void AddToQueue(){
+        CallbackHelper.GetCallbackServerMediator().AddToQueue();
     }
 
     void SetupUIItems(String department){

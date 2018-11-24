@@ -20,7 +20,8 @@ class CallbackServerMediator {
     private Date mCallbackDate;
     private Resources mResources;
     private static final String mUserID = "AndroidUser1";
-    private static final int mTimeoutMs = 1000;
+    private static final int mTimeoutMs = 1500;
+    private static final int mMaxServerTries = 10;
 
     CallbackServerMediator(String serverInfo, Resources resources){
         mConnectionURL = serverInfo;
@@ -33,7 +34,6 @@ class CallbackServerMediator {
     }
 
     private String SendCommandReceiveResponse(String command){
-        int maxTries = 10;
         int tries = 0;
         boolean done = false;
         String returnItem = null;
@@ -49,7 +49,7 @@ class CallbackServerMediator {
             if(returnItem != null)
                 done = true;
             tries += 1;
-        }while (!done && tries < maxTries);
+        }while (!done && tries < mMaxServerTries);
         return returnItem;
     }
 
@@ -129,7 +129,6 @@ class CallbackServerMediator {
     }
 
     Date GetCallbackTime(){
-        //TODO: Get callback time from server
         String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_callback_time_server_add_id) + "&id=" + mUserID);
         try {
             return ConvertStringToDate(TrimString(response));
@@ -139,8 +138,47 @@ class CallbackServerMediator {
         }
     }
 
-    static void CancelCallback(){
-        //TODO: Send the server a cancellation notification
+    void CancelCallback(){
+        String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_callback_remove_add_id) + "&id=" + mUserID);
+        //TODO Do something with the response?
+    }
+
+    void AddToQueue(){
+        String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_add_queue_add_id) + "&id=" + mUserID);
+    }
+
+    private Date ConvertStringToDate(String stringDate){
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
+        if(stringDate.length() == 0){
+            return cal.getTime();
+        }
+        String stringDateArray[] = stringDate.split(" ");
+        Date date = new Date();
+        if(stringDateArray.length < 3){
+            return cal.getTime();
+        }
+        String minute = stringDateArray[2];
+        String hour = stringDateArray[1];
+        String day = stringDateArray[0];
+        date.setHours(Integer.valueOf(hour));
+        date.setMinutes(Integer.valueOf(minute));
+        date.setSeconds(0);
+        int dayFromString = Integer.valueOf(stringDateArray[0]);
+        //If it's Saturday and the next available day is not Saturday, normalize the day
+        if(date.getDay() == 6 && dayFromString != 6)
+            dayFromString += 6;
+
+        cal.setTime(date);
+        cal.add(Calendar.HOUR_OF_DAY, (dayFromString - date.getDay()) * 24);
+        return cal.getTime();
+    }
+
+    private class AsyncConnectToServer extends AsyncTask<String,String,String>{
+        @Override
+        protected String doInBackground(String... strings) {
+            String returnItem = ConnectToServer(strings[0]);
+            return returnItem;
+        }
     }
 
     private Date GetOfflineNextAvailableTime(String department){
@@ -182,39 +220,5 @@ class CallbackServerMediator {
         }
         value = value.replaceAll("\n","");
         return value;
-    }
-
-    private Date ConvertStringToDate(String stringDate){
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
-        if(stringDate.length() == 0){
-            return cal.getTime();
-        }
-        String stringDateArray[] = stringDate.split(" ");
-        Date date = new Date();
-        if(stringDateArray.length < 3){
-            return cal.getTime();
-        }
-        String minute = stringDateArray[2];
-        String hour = stringDateArray[1];
-        String day = stringDateArray[0];
-        date.setHours(Integer.valueOf(hour));
-        date.setMinutes(Integer.valueOf(minute));
-        date.setSeconds(0);
-        int dayFromString = Integer.valueOf(stringDateArray[0]);
-        //If it's Saturday and the next available day is not Saturday, normalize the day
-        if(date.getDay() == 6 && dayFromString != 6)
-            dayFromString += 6;
-
-        cal.setTime(date);
-        cal.add(Calendar.HOUR_OF_DAY, (dayFromString - date.getDay()) * 24);
-        return cal.getTime();
-    }
-
-    private class AsyncConnectToServer extends AsyncTask<String,String,String>{
-        @Override
-        protected String doInBackground(String... strings) {
-            String returnItem = ConnectToServer(strings[0]);
-            return returnItem;
-        }
     }
 }

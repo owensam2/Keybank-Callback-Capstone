@@ -2,18 +2,18 @@
     <string name="app_name">KeyBank.Callback</string>
 
     <string-array name="ListOfQuestions">
-        <item>Fraudulent Activity Help</item>
-        <item>Forgot Password</item>
-        <item>Account Balance Help</item>
-        <item>Loan Help</item>
-        <item>Investment Help</item>
+        <item>I forgot my password or user ID</item>
+        <item>Fraud on my account</item>
+        <item>Checking\\savings account help</item>
+        <item>Question about my credit card</item>
+        <item>Question about my investments</item>
     </string-array>
 
     <string-array name="ListOfDepartments">
-        <item>Fraudulent Team</item>
         <item>Password Help</item>
+        <item>Fraudulent Team</item>
         <item>Customer Service</item>
-        <item>Loan Department</item>
+        <item>Customer Service</item>
         <item>Investment Services</item>
     </string-array>
 
@@ -50,7 +50,7 @@
     <string name="estimated_wait_time">Estimated wait time:</string>
     <string name="_100_minutes">100 Minutes</string>
     <string name="department">Department</string>
-    <string name="call_immediately">Call Immediately</string>
+    <string name="call_immediately">Connect me now</string>
     <string name="call_immediately_and_wait_on_hold">Call Immediately and wait on hold</string>
     <string name="_100">100</string>
     <string name="callback_has_been_scheduled">Callback has been Scheduled</string>
@@ -65,7 +65,7 @@
     <string name="saturday">Saturday </string>
     <string name="monday">Monday</string>
     <string name="custom">Or Another Time</string>
-    <string name="schedule_callback">Schedule Callback</string>
+    <string name="schedule_callback">Call me back later when I\'m available</string>
     <string name="callback_scheduler">Callback Scheduler</string>
     <string name="done">Done</string>
     <string name="question_to_user">Question to user</string>
@@ -78,15 +78,17 @@
     <string name="real_yes">Yes</string>
     <string name="real_no">No</string>
     <string name="server_connection">http://ceclnx01.cec.miamioh.edu:2020/</string>
-    <string name="server_add_queue_add_id">ADD_QUEUE id=</string>
+    <string name="server_add_queue_add_id">ADD_QUEUE</string>
     <string name="server_queue_time">QUEUE_TIME</string>
     <string name="server_next_queue_time">NEXT_QUEUE_TIME</string>
     <string name="server_schedule_callback_id_day_hour_minute">CALLBACK</string>
     <string name="server_callback_time_server_add_id">CALLBACK_TIME</string>
-    <string name="server_callback_remove_add_id">REMOVE id=</string>
+    <string name="server_callback_remove_add_id">REMOVE</string>
     <string name="server_show">SHOW</string>
     <string name="i_need_help">I need help</string>
     <string name="keybank_main">KeyBank Main</string>
+    <string name="callback_not_supported_title">We\'re Sorry</string>
+    <string name="callback_not_supported_message">We are having trouble \n connecting you automatically. \n \n Please call \n 1-800-KEY-2-YOU \n directly</string>
 
     <integer name="FirstSuggestedTimeHour">9</integer>
     <integer name="FirstSuggestedTimeMinute">00</integer>

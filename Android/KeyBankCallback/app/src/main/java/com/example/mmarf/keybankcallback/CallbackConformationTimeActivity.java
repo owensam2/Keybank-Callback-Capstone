@@ -22,6 +22,13 @@ public class CallbackConformationTimeActivity extends AppCompatActivity {
         mResources = getResources();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Button cancelButton = findViewById(R.id.buttonCancelCallback);
+        Button mainPageButton = findViewById(R.id.buttonMainMenu);
+        mainPageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CallbackHelper.TransferToMainPage(CallbackConformationTimeActivity.this);
+            }
+        });
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
