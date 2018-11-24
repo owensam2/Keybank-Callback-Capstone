@@ -2,6 +2,7 @@ package com.example.mmarf.keybankcallback;
 
 import android.content.res.Resources;
 import android.os.AsyncTask;
+import android.telecom.Call;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -102,7 +103,10 @@ class CallbackServerMediator {
             returnDate = ConvertStringToDate(TrimString(response));
         }
         else{
-            returnDate = GetOfflineNextAvailableTime(department);
+            //Fake out next available time by adding an hour.
+            Date nextAvailable = GetOfflineNextAvailableTime(department);
+            nextAvailable.setHours(nextAvailable.getHours() + 1);
+            return nextAvailable;
         }
         return returnDate;
     }
@@ -205,6 +209,7 @@ class CallbackServerMediator {
         }
         else
             mOfflineModeCallbackAdded = false;
+            mCallbackDate = null;
         //TODO Do something with the response?
     }
 
