@@ -24,6 +24,7 @@ public class CallbackHelper {
     private static CallbackServerMediator mCallbackServerMediator;
     private static Date mCustomStartingDate;
     private static boolean mDemoMode = true;
+    private static final int mMaxCallbackMinuteShow = 60;
 
     static void Call(Context context){
         Resources resources = context.getResources();
@@ -94,7 +95,7 @@ public class CallbackHelper {
                 .setPositiveButton(resources.getString(R.string.real_yes), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         CallbackHelper.CancelCallback();
-                        CallbackHelper.TransferToMainQuestions(builder.getContext());
+                        CallbackHelper.TransferToMainPage(builder.getContext());
                     }
                 })
                 .setNegativeButton(resources.getString(R.string.real_no), new DialogInterface.OnClickListener() {
@@ -152,9 +153,35 @@ public class CallbackHelper {
         context.startActivity(SuggestionScheduler);
     }
 
-    private static void TransferToMainQuestions(Context context){
-        Intent SuggestionScheduler = new Intent(context.getApplicationContext(), CallbackQuestionsActivity.class);
-        context.startActivity(SuggestionScheduler);
+    static int GetDateDiffInMinutes(Date dateolder, Date dateYounger){
+        Calendar queueTimeCal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
+        Calendar currentTimeCal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
+        queueTimeCal.setTime(dateolder);
+        currentTimeCal.setTime(dateYounger);
+        long milliSecDifference = queueTimeCal.getTimeInMillis() - currentTimeCal.getTimeInMillis();
+        return (int)(milliSecDifference / (60*1000));
+    }
+
+    static void TransferToCorrectAreaFromMainPage(Context context){
+        if(mCallbackServerMediator == null){
+            TransferToQuestionsActivity(context);
+        }
+        else{
+            //See if there is anything scheduled
+            Date callbackDate = mCallbackServerMediator.GetCallbackTime();
+            if(callbackDate == null){
+                TransferToQuestionsActivity(context);
+            }
+            else{
+                //Figure what screen to display. If the call is less than an hour away, display a minute counter.
+                if(mCallbackServerMediator.GetEstimatedMinutesOfScheduledCallback(mCallbackServerMediator.GetDepartment()) < mMaxCallbackMinuteShow){
+                    TransferToConformationActivity(context, mCallbackServerMediator.GetDepartment());
+                }
+                else{
+                    TransferToConformationTimeActivity(context, mCallbackServerMediator.GetDepartment());
+                }
+            }
+        }
     }
 
     private static void CancelCallback(){

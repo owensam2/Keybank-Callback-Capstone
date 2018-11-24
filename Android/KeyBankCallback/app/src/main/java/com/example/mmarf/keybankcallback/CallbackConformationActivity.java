@@ -33,7 +33,6 @@ public class CallbackConformationActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CancelCallback();
                 CallbackHelper.DisplayYesNoDialogForCancelCallback(CallbackConformationActivity.this, mResources.getString(R.string.cancel_callback), mResources.getString(R.string.wish_to_cancel_callback));
             }
         });
@@ -49,11 +48,6 @@ public class CallbackConformationActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    private void CancelCallback(){
-        CallbackHelper.GetCallbackServerMediator().CancelCallback();
-    }
-
 
     private  void SetupScreen(String department){
         //Get the desired department

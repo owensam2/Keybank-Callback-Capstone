@@ -17,19 +17,29 @@ import java.util.concurrent.ExecutionException;
 class CallbackServerMediator {
     private String mConnectionURL;
     private boolean isConnected = false;
+    private boolean mOfflineMode = true;
+    private boolean mOfflineModeCallbackAdded = false;
+    private String mCurrentDepartment;
     private Date mCallbackDate;
     private Resources mResources;
-    private static final String mUserID = "AndroidUser1";
+    private static String mUserID;
     private static final int mTimeoutMs = 1500;
     private static final int mMaxServerTries = 10;
+    private static String mCannotFindCallbackTime;
+
+    String GetDepartment(){return mCurrentDepartment;}
 
     CallbackServerMediator(String serverInfo, Resources resources){
         mConnectionURL = serverInfo;
         mResources = resources;
+        mUserID = mResources.getString(R.string.android_user);
+        mCannotFindCallbackTime = mResources.getString(R.string.server_cannot_find_callback_time);
         //Try to get something from the server.
-        String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_next_queue_time));
-        if(response != null){
-            isConnected = true;
+        if(!mOfflineMode){
+            String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_next_queue_time));
+            if(response != null){
+                isConnected = true;
+            }
         }
     }
 
@@ -86,6 +96,7 @@ class CallbackServerMediator {
 
     Date GetNextAvailableTime(String department){
         Date returnDate = null;
+        mCurrentDepartment = department;
         if(isConnected){
             String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_next_queue_time));
             returnDate = ConvertStringToDate(TrimString(response));
@@ -97,6 +108,7 @@ class CallbackServerMediator {
     }
 
     Date GetServerTime(String department){
+        mCurrentDepartment = department;
         Date returnDate;
         if(isConnected){
             String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_time));
@@ -109,6 +121,7 @@ class CallbackServerMediator {
     }
 
     int GetEstimatedMinutesOfQueue(String department){
+        mCurrentDepartment = department;
         int queueTime;
         if(isConnected){
             String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_queue_time));
@@ -121,27 +134,24 @@ class CallbackServerMediator {
     }
 
     String GetPhoneNumberForDepartment(String department){
+        mCurrentDepartment = department;
         //TODO Get phone number
         return  GetOfflinePhoneNumber();
     }
 
     void SetUserToNextAvailableCallback(String department){
+        mCurrentDepartment = department;
         SetCallbackTime(GetNextAvailableTime(department), department);
     }
 
     int GetEstimatedMinutesOfScheduledCallback(String department){
+        mCurrentDepartment = department;
         Date queueTime;
         int returnMinutes;
         if(isConnected){
             String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_callback_time_server_add_id)  + "&id=" + mUserID);
             queueTime = ConvertStringToDate(TrimString(response));
-            Date currentServerTime = GetServerTime(department);
-            Calendar queueTimeCal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
-            Calendar currentTimeCal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
-            queueTimeCal.setTime(queueTime);
-            currentTimeCal.setTime(currentServerTime);
-            long milliSecDifference = queueTimeCal.getTimeInMillis() - currentTimeCal.getTimeInMillis();
-            returnMinutes = (int)(milliSecDifference / (60*1000));
+            returnMinutes = CallbackHelper.GetDateDiffInMinutes(queueTime, GetServerTime(department));
         }
         else {
             returnMinutes = GetOfflineTime(department);
@@ -150,35 +160,58 @@ class CallbackServerMediator {
     }
 
     void SetCallbackTime(Date date, String department){
-        String timeBuilder = "&id=" + mUserID + "&day=" + String.valueOf(date.getDay()) + "&hour=" + String.valueOf(date.getHours()) + "&min=" + String.valueOf(date.getMinutes());
-        String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_schedule_callback_id_day_hour_minute)+timeBuilder);
-        //TODO: update this if getting a 1 back due to slot already filled?
+        mCurrentDepartment = department;
+        if(isConnected){
+            String timeBuilder = "&id=" + mUserID + "&day=" + String.valueOf(date.getDay()) + "&hour=" + String.valueOf(date.getHours()) + "&min=" + String.valueOf(date.getMinutes());
+            String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_schedule_callback_id_day_hour_minute)+timeBuilder);
+            //TODO: update this if getting a 1 back due to slot already filled?
 
-        try {
-            mCallbackDate = ConvertStringToDate(TrimString(response));
+            try {
+                mCallbackDate = ConvertStringToDate(TrimString(response));
+            }
+            catch (java.lang.NumberFormatException e){
+                mCallbackDate = date;
+            }
         }
-        catch (java.lang.NumberFormatException e){
+        else
+            mOfflineModeCallbackAdded = true;
             mCallbackDate = date;
-        }
     }
 
     Date GetCallbackTime(){
-        String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_callback_time_server_add_id) + "&id=" + mUserID);
-        try {
-            return ConvertStringToDate(TrimString(response));
+        if(isConnected){
+            String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_callback_time_server_add_id) + "&id=" + mUserID);
+            //Cannot find user's time
+            if(response == mCannotFindCallbackTime)
+                return null;
+            try {
+                return ConvertStringToDate(TrimString(response));
+            }
+            catch (java.lang.NumberFormatException e){
+                return  mCallbackDate;
+            }
         }
-        catch (java.lang.NumberFormatException e){
-            return  mCallbackDate;
-        }
+        else
+            if(mOfflineModeCallbackAdded){
+                return  mCallbackDate;
+            }
+            else
+                return null;
     }
 
     void CancelCallback(){
-        String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_callback_remove_add_id) + "&id=" + mUserID);
+        if(isConnected){
+            String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_callback_remove_add_id) + "&id=" + mUserID);
+        }
+        else
+            mOfflineModeCallbackAdded = false;
         //TODO Do something with the response?
     }
 
     void AddToDemoQueue(){
-        String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_add_queue_add_id) + "&id=" + mUserID);
+        if(isConnected){
+            String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_add_queue_add_id) + "&id=" + mUserID);
+        }
     }
 
     private Date ConvertStringToDate(String stringDate){
@@ -239,10 +272,15 @@ class CallbackServerMediator {
     }
 
     private int GetOfflineTime(String department){
-        if(department.contentEquals("Fraudulent Team"))
+        if(department.contentEquals("Fraudulent Team") && mCallbackDate == null)
             return 0;
         else
-            return 10;
+            if(mCallbackDate != null){
+                return CallbackHelper.GetDateDiffInMinutes(mCallbackDate, GetServerTime(department));
+            }
+            else{
+                return 10;
+            }
     }
     private String GetOfflinePhoneNumber(){
         return "8005392968";

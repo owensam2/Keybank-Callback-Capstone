@@ -46,16 +46,16 @@
     </string-array>
 
     <string name="title_activity_callback_schedule">CallbackScheduleActivity</string>
-    <string name="request_callback">Request Callback</string>
+    <string name="request_callback">Call me back as soon as someone is available</string>
     <string name="estimated_wait_time">Estimated wait time:</string>
     <string name="_100_minutes">100 Minutes</string>
     <string name="department">Department</string>
     <string name="call_immediately">Connect me now</string>
-    <string name="call_immediately_and_wait_on_hold">Call Immediately and wait on hold</string>
+    <string name="call_immediately_and_wait_on_hold">Connect me now - I’ll wait on hold</string>
     <string name="_100">100</string>
     <string name="callback_has_been_scheduled">Callback has been Scheduled</string>
-    <string name="main_page">Main Page</string>
-    <string name="There_is_currently_no_wait">There is currently no wait</string>
+    <string name="main_page">OK</string>
+    <string name="There_is_currently_no_wait">We have someone ready immediately to answer your question:</string>
     <string name="minutes">Minutes</string>
     <string name="at_1_00_pm">Today at 1:00:PM</string>
     <string name="at_8_30_am">Today at 9:00 AM</string>
@@ -73,8 +73,8 @@
     <string name="estimated_callback_time">Estimated Callback Time:</string>
     <string name="_12_00_pm">12:00 PM</string>
     <string name="main_menu">Main Menu</string>
-    <string name="cancel_callback">Cancel Callback</string>
-    <string name="wish_to_cancel_callback">Do you wish to cancel callback?</string>
+    <string name="cancel_callback">Cancel this callback</string>
+    <string name="wish_to_cancel_callback">Do you wish to cancel your callback?</string>
     <string name="real_yes">Yes</string>
     <string name="real_no">No</string>
     <string name="server_connection">http://ceclnx01.cec.miamioh.edu:2020/</string>
@@ -86,10 +86,12 @@
     <string name="server_callback_remove_add_id">REMOVE</string>
     <string name="server_time">SERVER_TIME</string>
     <string name="server_show">SHOW</string>
+    <string name="server_cannot_find_callback_time">Cannot Find Callback</string>
     <string name="i_need_help">I need help</string>
     <string name="keybank_main">KeyBank Main</string>
     <string name="callback_not_supported_title">We\'re Sorry</string>
     <string name="callback_not_supported_message">We are having trouble \n connecting you automatically. \n \n Please call \n 1-800-KEY-2-YOU \n directly</string>
+    <string name="android_user">AndroidUser1</string>
 
     <integer name="FirstSuggestedTimeHour">9</integer>
     <integer name="FirstSuggestedTimeMinute">00</integer>

@@ -11,13 +11,14 @@ public class MainPageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
+        getSupportActionBar().setIcon(R.drawable.key_bank);
 
         Button buttonCallbackQuestions = findViewById(R.id.buttonCallbackQuestions);
         buttonCallbackQuestions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO figure out if there is a callback that has been scheduled already and take the user to that page.
-                CallbackHelper.TransferToQuestionsActivity(MainPageActivity.this);
+                CallbackHelper.TransferToCorrectAreaFromMainPage(MainPageActivity.this);
             }
         });
     }
