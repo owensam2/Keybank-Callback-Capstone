@@ -36,7 +36,7 @@ public class CallbackActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 CallbackHelper.GetCallbackServerMediator().SetUserToNextAvailableCallback(mDepartment);
-                CallbackHelper.TransferToConformationActivity(CallbackActivity.this,mDepartment);
+                CallbackHelper.TransferToCorrectAreaByCallbackTime(CallbackActivity.this);
             }
         });
         this.mButtonScheduleCallback.setOnClickListener(new View.OnClickListener() {

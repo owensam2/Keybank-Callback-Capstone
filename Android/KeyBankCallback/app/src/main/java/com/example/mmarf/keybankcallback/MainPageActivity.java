@@ -18,7 +18,7 @@ public class MainPageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //TODO figure out if there is a callback that has been scheduled already and take the user to that page.
-                CallbackHelper.TransferToCorrectAreaFromMainPage(MainPageActivity.this);
+                CallbackHelper.TransferToCorrectAreaByCallbackTime(MainPageActivity.this);
             }
         });
     }

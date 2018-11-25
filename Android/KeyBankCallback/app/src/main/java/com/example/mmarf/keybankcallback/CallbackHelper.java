@@ -21,10 +21,13 @@ import java.util.TimeZone;
 
 public class CallbackHelper {
 
-    private static CallbackServerMediator mCallbackServerMediator;
+    private static ICallbackServerMediator mCallbackServerMediator;
     private static Date mCustomStartingDate;
     private static boolean mDemoMode = true;
+    private static boolean mOfflineMode = true;
     private static final int mMaxCallbackMinuteShow = 60;
+    private static final String mToday = "Today";
+    private static final String mTomorrow = "Tomorrow";
 
     static void Call(Context context){
         Resources resources = context.getResources();
@@ -162,7 +165,7 @@ public class CallbackHelper {
         return (int)(milliSecDifference / (60*1000));
     }
 
-    static void TransferToCorrectAreaFromMainPage(Context context){
+    static void TransferToCorrectAreaByCallbackTime(Context context){
         if(mCallbackServerMediator == null){
             TransferToQuestionsActivity(context);
         }
@@ -283,16 +286,36 @@ public class CallbackHelper {
         return df.format(date.getTime());
     }
 
-    static  String GetDayStringFromDate(Date date){
-        //TODO differentiate from today/tomorrow/different day
-        return (String) DateFormat.format("EEEE", date);
+    static String GetDayStringFromDate(Date date){
+        Date currentTime =  Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone())).getTime();
+        //Today
+        if(currentTime.getDay() == date.getDay()){
+            return mToday;
+        }
+        //Tomorrow
+        else if(currentTime.getDay() == date.getDay() - 1){
+            return mTomorrow;
+        }
+        //Tomorrow, but the current day is end of week Saturday (6), but this would be rare to hit.
+        else if(currentTime.getDay() - 7 == date.getDay() - 1){
+            return mTomorrow;
+        }
+        //Return the actual day name
+        else{
+            return (String) DateFormat.format("EEEE", date);
+        }
     }
     static void InitializeServerMediator(Context context){
         Resources resources = context.getResources();
-        mCallbackServerMediator = new CallbackServerMediator(resources.getString(R.string.server_connection), context.getResources());
+        if(mOfflineMode){
+            mCallbackServerMediator = new CallbackServerMediatorOffline(context.getResources());
+        }
+        else{
+            mCallbackServerMediator = new CallbackServerMediator(resources.getString(R.string.server_connection), context.getResources());
+        }
     }
 
-    static CallbackServerMediator GetCallbackServerMediator(){
+    static ICallbackServerMediator GetCallbackServerMediator(){
         return mCallbackServerMediator;
     }
 
