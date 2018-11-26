@@ -14,6 +14,7 @@ import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.widget.TextView;
 
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -325,5 +326,30 @@ public class CallbackHelper {
 
     static Date GetCustomStartingDate(){
         return mCustomStartingDate;
+    }
+
+    static Date UpdateCustomDate(String dateString){
+        Date date = StringToDate(dateString, "hh:mm a");
+        mCustomStartingDate.setHours(date.getHours());
+        mCustomStartingDate.setMinutes(date.getMinutes());
+        return mCustomStartingDate;
+    }
+
+    private static Date StringToDate(String aDate,String aFormat) {
+        if (aDate == null) return null;
+        ParsePosition pos = new ParsePosition(0);
+        SimpleDateFormat simpledateformat = new SimpleDateFormat(aFormat);
+        Date stringDate = simpledateformat.parse(aDate, pos);
+        return stringDate;
+    }
+
+    static Date RoundToNextQuarterOfHour(Date date){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        int unRoundedMinutes = calendar.get(Calendar.MINUTE);
+        int mod = unRoundedMinutes % 15;
+        calendar.add(Calendar.MINUTE, 15-mod);
+        return calendar.getTime();
     }
 }

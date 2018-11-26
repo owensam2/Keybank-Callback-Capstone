@@ -37,23 +37,16 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewScheduleTime2" />
 
     <Spinner
-        android:id="@+id/spinnerHour"
-        android:layout_width="172dp"
+        android:id="@+id/spinnerTime"
+        android:layout_width="167dp"
         android:layout_height="43dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewScheduleTodayTomorrow" />
-
-    <Spinner
-        android:id="@+id/spinnerMinute"
-        android:layout_width="167dp"
-        android:layout_height="43dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewScheduleTodayTomorrow" />
 
     <Button
@@ -68,6 +61,6 @@
         android:text="@string/done"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerMinute" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerTime" />
 
 </android.support.constraint.ConstraintLayout>

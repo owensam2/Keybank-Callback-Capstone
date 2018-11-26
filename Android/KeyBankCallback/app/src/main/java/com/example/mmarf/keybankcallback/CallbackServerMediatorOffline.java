@@ -68,9 +68,10 @@ public class CallbackServerMediatorOffline implements ICallbackServerMediator {
             return null;
     }
 
-    public void CancelCallback(){
+    public boolean CancelCallback(){
         mOfflineModeCallbackAdded = false;
         mCallbackDate = null;
+        return true;
     }
 
 

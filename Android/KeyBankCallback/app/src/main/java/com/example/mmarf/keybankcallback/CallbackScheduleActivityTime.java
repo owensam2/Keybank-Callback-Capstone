@@ -1,6 +1,5 @@
 package com.example.mmarf.keybankcallback;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,12 +10,17 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
 public class CallbackScheduleActivityTime extends AppCompatActivity {
     TextView mTextViewScheduleTodayTomorrow;
-    Spinner mSpinnerHour;
-    Spinner mSpinnerMinute;
+    Spinner mSpinnerTime;
     String mDepartment;
 
     @Override
@@ -28,22 +32,17 @@ public class CallbackScheduleActivityTime extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //Get the day that we are starting from.
         this.mTextViewScheduleTodayTomorrow = findViewById(R.id.textViewScheduleTodayTomorrow);
-        this.mSpinnerHour = findViewById(R.id.spinnerHour);
-        this.mSpinnerMinute = findViewById(R.id.spinnerMinute);
+        this.mSpinnerTime = findViewById(R.id.spinnerTime);
         SetupLabel();
-        AddHoursToSpinner();
-        AddMinutesToSpinner();
+        AddTimesToSpinner();
         Button buttonConfirmSchedule = findViewById(R.id.buttonConfirmSchedule);
         buttonConfirmSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Send what is present in the spinner boxes to the scheduler.
-                String hour = (String)mSpinnerHour.getSelectedItem();
-                String minute = (String)mSpinnerMinute.getSelectedItem();
-                Date dateToModify = CallbackHelper.GetCustomStartingDate();
-                dateToModify.setHours(GetProperHourToDisplay(hour));
-                dateToModify.setMinutes(Integer.valueOf(minute));
-                CallbackHelper.GetCallbackServerMediator().SetCallbackTime(dateToModify, mDepartment);
+                String time = (String)mSpinnerTime.getSelectedItem();
+                Date requestedDate = CallbackHelper.UpdateCustomDate(time);
+                CallbackHelper.GetCallbackServerMediator().SetCallbackTime(requestedDate, mDepartment);
                 CallbackHelper.TransferToConformationTimeActivity(CallbackScheduleActivityTime.this, mDepartment);
             }
         });
@@ -65,85 +64,22 @@ public class CallbackScheduleActivityTime extends AppCompatActivity {
         mTextViewScheduleTodayTomorrow.setText(CallbackHelper.GetDayStringFromDate(CallbackHelper.GetCustomStartingDate()));
     }
 
-    private int GetProperHourToDisplay(String hour){
-        //If it's less than 8, add 12 hours to it.
-        int realHour = Integer.valueOf(hour);
-        if(realHour < 8)
-            realHour = realHour + 12;
-        return realHour;
-    }
+    private void AddTimesToSpinner(){
+        Date runningDate = CallbackHelper.RoundToNextQuarterOfHour(CallbackHelper.GetCustomStartingDate());
+        Boolean done = false;
+        List<String> listOfTimes = new ArrayList<>();
+        do{
+             listOfTimes.add((String) android.text.format.DateFormat.format("hh:mm a", runningDate));
+            runningDate = CallbackHelper.RoundToNextQuarterOfHour(runningDate);
+            if(runningDate.getHours() >= 17){
+                done = true;
+            }
+        }while(!done);
 
-
-    private void AddHoursToSpinner(){
-        String[] arrayAllHours;
-        int hour = CallbackHelper.GetCustomStartingDate().getHours();
-        if(hour <= 8){
-            arrayAllHours = new String[] {
-                    "8", "9", "10", "11", "12", "1", "2", "3", "4", "5"
-            };
-        }
-        else if(hour <= 9){
-            arrayAllHours = new String[] {
-                    "9", "10", "11", "12", "1", "2", "3", "4", "5"
-            };
-        }
-        else if(hour <= 10){
-            arrayAllHours = new String[] {
-                    "10", "11", "12", "1", "2", "3", "4", "5"
-            };
-        }
-        else if(hour <= 11){
-            arrayAllHours = new String[] {
-                     "11", "12", "1", "2", "3", "4", "5"
-            };
-        }
-        else if(hour <= 12){
-            arrayAllHours = new String[] {
-                    "12", "1", "2", "3", "4", "5"
-            };
-        }
-        else if(hour <= 13){
-            arrayAllHours = new String[] {
-                    "1", "2", "3", "4", "5"
-            };
-        }
-        else if(hour <= 14){
-            arrayAllHours = new String[] {
-                    "2", "3", "4", "5"
-            };
-        }
-        else if(hour <= 15){
-            arrayAllHours = new String[] {
-                    "3", "4", "5"
-            };
-        }
-        else if(hour <= 16){
-            arrayAllHours = new String[] {
-                    "4", "5"
-            };
-        }
-        else if(hour <= 17){
-            arrayAllHours = new String[] {
-                    "5"
-            };
-        }
-        else{
-            arrayAllHours = new String[] {
-                    "8", "9", "10", "11", "12", "1", "2", "3", "4", "5"
-            };
-        }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, arrayAllHours);
-        mSpinnerHour.setAdapter(adapter);
+                android.R.layout.simple_spinner_item, listOfTimes);
+        mSpinnerTime.setAdapter(adapter);
     }
 
-    private void AddMinutesToSpinner(){
-        String[] arraySpinner = new String[] {
-                "00", "15", "30", "45"
-        };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, arraySpinner);
-        mSpinnerMinute.setAdapter(adapter);
-    }
 
 }

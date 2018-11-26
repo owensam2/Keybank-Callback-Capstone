@@ -17,7 +17,6 @@ public class MainPageActivity extends AppCompatActivity {
         buttonCallbackQuestions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO figure out if there is a callback that has been scheduled already and take the user to that page.
                 CallbackHelper.TransferToCorrectAreaByCallbackTime(MainPageActivity.this);
             }
         });

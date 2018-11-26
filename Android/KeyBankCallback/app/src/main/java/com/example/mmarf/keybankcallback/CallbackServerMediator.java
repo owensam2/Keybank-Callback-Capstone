@@ -132,10 +132,15 @@ class CallbackServerMediator implements ICallbackServerMediator {
         mCurrentDepartment = department;
         String timeBuilder = "&id=" + mUserID + "&day=" + String.valueOf(date.getDay()) + "&hour=" + String.valueOf(date.getHours()) + "&min=" + String.valueOf(date.getMinutes());
         String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_schedule_callback_id_day_hour_minute)+timeBuilder);
-        //TODO: update this if getting a 1 back due to slot already filled?
-
+        //The first string value is if the time sent in is acceptable. If not, it returns the next available time
+        String firstCharacter = response.substring(0,1);
+        String trimmedResponse = response.substring(1,response.length());
+        //New time recommended
+        if(Integer.valueOf(firstCharacter) == 1){
+            //TODO: update this if getting a 1 back due to slot already filled?
+        }
         try {
-            mCallbackDate = ConvertStringToDate(TrimString(response));
+            mCallbackDate = ConvertStringToDate(TrimString(trimmedResponse));
         }
         catch (java.lang.NumberFormatException e){
             mCallbackDate = date;
@@ -155,9 +160,14 @@ class CallbackServerMediator implements ICallbackServerMediator {
         }
     }
 
-    public void CancelCallback(){
+    public boolean CancelCallback(){
         String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_callback_remove_add_id) + "&id=" + mUserID);
-        //TODO Do something with the response?
+        //0 means removal was successful
+        if(Integer.valueOf(response) == 0){
+            return true;
+        }
+        else
+            return false;
     }
 
     public void AddToDemoQueue(){
