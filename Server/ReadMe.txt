@@ -21,9 +21,11 @@ Full command list:
      * "/ADD_QUEUE" - Add a user to the on-hold queue immediately 
      *      Requires id
      *      Returns 0 if successful
+     *              if time slot was full, returns '1 D HH MM'
      * "/NEXT_QUEUE_TIME" - Get the estimated next available time someone can
      *                      be added to the queue
-     *      Returns time in D HH MM
+     *      Requires id
+     *      Returns '0 D HH MM' if successful
      * "/CALLBACK" - schedule a user to be called back at a specific time
      *      Requires id, day, hour, min
      *      Returns '0 D HH MM' if successful
