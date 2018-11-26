@@ -157,10 +157,10 @@ public class CallbackHelper {
         context.startActivity(SuggestionScheduler);
     }
 
-    static int GetDateDiffInMinutes(Date dateolder, Date dateYounger){
+    static int GetDateDiffInMinutes(Date dateOlder, Date dateYounger){
         Calendar queueTimeCal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
         Calendar currentTimeCal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
-        queueTimeCal.setTime(dateolder);
+        queueTimeCal.setTime(dateOlder);
         currentTimeCal.setTime(dateYounger);
         long milliSecDifference = queueTimeCal.getTimeInMillis() - currentTimeCal.getTimeInMillis();
         return (int)(milliSecDifference / (60*1000));
@@ -202,7 +202,11 @@ public class CallbackHelper {
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
         Date date = GetNextAvailableTimeForDepartment(department);
         cal.setTime(date);
-        cal.add(Calendar.HOUR_OF_DAY, GetHoursInDayIncrementsFromDates(cal.getTime(), date));
+        int hoursToAdd = GetHoursInDayIncrementsFromDates(cal.getTime(), date);
+        if(hoursToAdd > 0){
+            cal.add(Calendar.HOUR_OF_DAY, hoursToAdd);
+            cal.setTime(ResetToOpeningTime(cal.getTime()));
+        }
         return cal.getTime();
     }
 
@@ -232,9 +236,18 @@ public class CallbackHelper {
         cal.setTime(date);
         //Check to see if it's for today or the "next" day. If so, get the next available day from the server
         Date nextAvailableDate = GetCallbackServerMediator().GetNextAvailableTime(department);
-        if(cal.getTime().before(nextAvailableDate))
+        if(cal.getTime().before(nextAvailableDate)){
             cal.add(Calendar.HOUR_OF_DAY, GetHoursInDayIncrementsFromDates(cal.getTime(), nextAvailableDate));
+        }
         return cal;
+    }
+
+    private static Date ResetToOpeningTime(Date sentDate){
+        Date returnDate = sentDate;
+        returnDate.setMinutes(0);
+        returnDate.setSeconds(0);
+        returnDate.setHours(8);
+        return returnDate;
     }
 
     private static int GetHoursInDayIncrementsFromDates(Date dateOfInterest, Date dateNextAvailable){
@@ -343,12 +356,15 @@ public class CallbackHelper {
         return stringDate;
     }
 
-    static Date RoundToNextQuarterOfHour(Date date){
+    static Date RoundToNextQuarterOfHour(Date date, boolean forceIncrement){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
 
         int unRoundedMinutes = calendar.get(Calendar.MINUTE);
         int mod = unRoundedMinutes % 15;
+        if(!forceIncrement && mod == 0){
+            mod = 15;
+        }
         calendar.add(Calendar.MINUTE, 15-mod);
         return calendar.getTime();
     }
