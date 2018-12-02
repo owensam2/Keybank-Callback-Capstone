@@ -3,7 +3,9 @@
  * Author: Chris Benton <bentoncl at bentoncl@miamioh.edu>,
  *          Andrew Owens <owensam2 at owensam2@miamioh.edu>
  *
- * Copyright 2018 Chris Benton
+ * Copyright 2018 Chris Benton, Andrew Owens
+ * 
+ * V 0.9 12/2/2018
  */
 
 #include <ext/stdio_filebuf.h>
@@ -210,7 +212,7 @@ std::string nextQueueTime(std::string id) {
     std::string request = "/CALLBACK&id=" + id +  "&day=" + day 
             + "&hour=" + hour + "&min=" + min;
     
-    return callback(request);
+    return callback(request).substr(2);
 }
 
 //remove a person from queue
@@ -240,8 +242,6 @@ std::string callback(std::string request) {
     
     time = day + "_" + hour + "_" + min;
     
-    std::string error = "0 ";
-    
     bool validTime = true;
     while(validTime){
         validTime = false;
@@ -250,7 +250,6 @@ std::string callback(std::string request) {
                 min = std::to_string(std::stoi(min) + 5);
                 time = day + "_" + hour + "_" + min;
                 validTime = true;
-                error = "1 ";
                 
             }
         }
@@ -259,15 +258,14 @@ std::string callback(std::string request) {
     callerNode node(id, day, hour, min);
     callBackVec.push_back(node);
     
-    return error + time;
+    return "0 " + time;
 }
 
 std::string getCallbackTime(std::string id) {
     std::string time = "Cannot Find Callback";
     for (int i = 0; i < callBackVec.size(); i++) {
         if (callBackVec[i].id == id) {
-            time = callBackVec[i].day + " " + callBackVec[i].hour 
-                    + " " + callBackVec[i].min;
+            time = callBackVec[i].time;
         }
     }
     return time;
@@ -300,9 +298,20 @@ std::string getDays() {
 std::string getTime(){
     std::time_t t = std::time(0);
     std::tm* now = std::localtime(&t);
-    std::string time = std::to_string(now->tm_wday) + " "
-            + std::to_string(now->tm_hour) + " " + std::to_string(now->tm_min);
+    std::string time = std::to_string(now->tm_wday) + "_"
+            + std::to_string(now->tm_hour) + "_" + std::to_string(now->tm_min);
     return time;
+}
+
+int officeOpen(){
+    std::time_t t = std::time(0);
+    std::tm* now = std::localtime(&t);
+    if(now->tm_wday == 0 || now->tm_wday == 7 || now->tm_hour < openTime || now->tm_hour > closeTime) {
+        return 1;
+    } else {
+        return 0;
+    }
+    return 1;
 }
 
 void cycleQueue() {
@@ -397,7 +406,8 @@ std::string processRequest(ConstStr type, ConstStr request) {
      * "/NEXT_QUEUE_TIME" - Get the estimated next available time someone can
      *                      be added to the queue
      *      Requires id
-     *      Returns time in D HH MM
+     *      Returns '0 D HH MM' if successful
+     *              if time slot was full, returns '1 D HH MM'
      * "/CALLBACK" - schedule a user to be called back at a specific time
      *      Requires id, day, hour, min
      *      Returns '0 D HH MM' if successful
@@ -417,6 +427,8 @@ std::string processRequest(ConstStr type, ConstStr request) {
      *      Returns time as D HH MM
      * "/SHOW" - shows both queues
      *      Returns a visual representaion of the queues
+     * "/OFFICE_OPEN" - checks if the call center office is open
+     *      Returns 0 if open, 1 if closed
      * "/GET_FRONT" - returns the id of the next user in queue (for testing)
      * "/GET_BACK" - returns the id of the last user in queue (for testing)     
      */
@@ -479,6 +491,10 @@ std::string processRequest(ConstStr type, ConstStr request) {
     // Return the current time
     else if(request == "/GET_TIME") {
         message = getTime();
+    }
+    //Check if the call center is open
+    else if(request == "/OFFICE_OPEN") {
+        message = std::to_string(officeOpen());
     }
     else {
         code = BAD;

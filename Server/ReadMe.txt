@@ -21,20 +21,17 @@ Full command list:
      * "/ADD_QUEUE" - Add a user to the on-hold queue immediately 
      *      Requires id
      *      Returns 0 if successful
-     *              if time slot was full, returns '1 D HH MM'
      * "/NEXT_QUEUE_TIME" - Get the estimated next available time someone can
      *                      be added to the queue
      *      Requires id
-     *      Returns '0 D HH MM' if successful
+     *      Returns '0 D_HH_MM' if successful
      * "/CALLBACK" - schedule a user to be called back at a specific time
      *      Requires id, day, hour, min
-     *      Returns '0 D HH MM' if successful
-     *              if time slot was full, returns '1 D HH MM' of next available time slot, does not
-			schedule a callback
+     *      Returns '0 D_HH_MM' if successful
      * "/CALLBACK_TIME" - check the time of a user in the callback queue
      *                      based on their id
      *      Requires id
-     *      Returns time as D HH MM
+     *      Returns time as D_HH_MM
      * "/REMOVE" - removes a user scheduled for callback based on their id
      *      Requires id
      *      Returns 0 if successful, otherwise return 1
@@ -44,5 +41,7 @@ Full command list:
      *      Returns days as D D
      * "/SHOW" - shows both queues
      *      Returns a visual representaion of the queues
+     * "/OFFICE_OPEN" - checks if the call center office is open
+     *      Returns 0 if open, 1 if closed
      * "/GET_FRONT" - returns the id of the next user in queue (for testing)
      * "/GET_BACK" - returns the id of the last user in queue (for testing)
