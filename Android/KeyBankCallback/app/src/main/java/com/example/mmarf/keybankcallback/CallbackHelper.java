@@ -25,7 +25,7 @@ public class CallbackHelper {
     private static ICallbackServerMediator mCallbackServerMediator;
     private static Date mCustomStartingDate;
     private static boolean mDemoMode = true;
-    private static boolean mOfflineMode = true;
+    private static boolean mOfflineMode = false;
     private static final int mMaxCallbackMinuteShow = 60;
     private static final String mToday = "Today";
     private static final String mTomorrow = "Tomorrow";

@@ -55,8 +55,10 @@
     <string name="call_immediately_and_wait_on_hold">Connect me now - I’ll wait on hold</string>
     <string name="_100">100</string>
     <string name="callback_has_been_scheduled">We will call you back at this number as soon as someone is available.</string>
+    <string name="callback_has_been_scheduled_with_time">We will call you back at this number at the scheduled time.</string>
     <string name="main_page">OK</string>
-    <string name="There_is_currently_no_wait">We have someone ready immediately to answer your question:</string>
+    <string name="There_is_currently_no_wait">We have someone ready immediately to answer your question</string>
+    <string name="we_are_closed">We are sorry, our offices are now closed. We want to help you as soon as possible. Please select an option.</string>
     <string name="minutes">Minutes</string>
     <string name="at_1_00_pm">Today at 1:00:PM</string>
     <string name="at_8_30_am">Today at 9:00 AM</string>

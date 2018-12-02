@@ -150,7 +150,7 @@ class CallbackServerMediator implements ICallbackServerMediator {
     public Date GetCallbackTime(){
         String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_callback_time_server_add_id) + "&id=" + mUserID);
         //Cannot find user's time
-        if(response == mCannotFindCallbackTime)
+        if(TrimString(response).equals(mCannotFindCallbackTime))
             return null;
         try {
             return ConvertStringToDate(TrimString(response));
@@ -163,7 +163,7 @@ class CallbackServerMediator implements ICallbackServerMediator {
     public boolean CancelCallback(){
         String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_callback_remove_add_id) + "&id=" + mUserID);
         //0 means removal was successful
-        if(Integer.valueOf(response) == 0){
+        if(Integer.valueOf(TrimString(response)) == 0){
             return true;
         }
         else
@@ -179,22 +179,35 @@ class CallbackServerMediator implements ICallbackServerMediator {
         if(stringDate == null || stringDate.length() == 0){
             return cal.getTime();
         }
-        String stringDateArray[] = stringDate.split(" ");
+        //Sometimes this comes in as a "response" "time"; other times its "time" only
+        //Format 0 1_8_15 "response time" or 1_8_15 "time" only
+        String stringDateArray[] = null;
+        String stringDateArrayStart[] = stringDate.split(" ");
+        for(String splitItem:stringDateArrayStart){
+            if(splitItem.contains("_")){
+                stringDateArray = splitItem.split("_");
+                break;
+            }
+        }
         Date date = new Date();
-        if(stringDateArray.length < 3){
+        //TODO Remove when server is fixed
+        if(stringDateArrayStart.length == 3){
+            stringDateArray = stringDateArrayStart;
+        }
+        if(stringDateArray == null || stringDateArray.length < 3){
+            //TODO Remove when server is fixed
             return cal.getTime();
         }
         String minute = stringDateArray[2];
         String hour = stringDateArray[1];
-        String day = stringDateArray[0];
         date.setHours(Integer.valueOf(hour));
         date.setMinutes(Integer.valueOf(minute));
         date.setSeconds(0);
         int dayFromString = Integer.valueOf(stringDateArray[0]);
         //If it's Saturday and the next available day is not Saturday, normalize the day
-        if(date.getDay() == 6 && dayFromString != 6)
-            dayFromString += 6;
-
+        if(date.getDay() == 6 && dayFromString != 6){
+            dayFromString += 7;
+        }
         cal.setTime(date);
         cal.add(Calendar.HOUR_OF_DAY, (dayFromString - date.getDay()) * 24);
         return cal.getTime();
