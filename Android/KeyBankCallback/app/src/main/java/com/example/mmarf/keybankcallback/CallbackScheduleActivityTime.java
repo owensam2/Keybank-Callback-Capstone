@@ -65,12 +65,14 @@ public class CallbackScheduleActivityTime extends AppCompatActivity {
     }
 
     private void AddTimesToSpinner(){
-        Date runningDate = CallbackHelper.RoundToNextQuarterOfHour(CallbackHelper.GetCustomStartingDate());
+        boolean forceIncrement = false;
+        Date runningDate = CallbackHelper.RoundToNextQuarterOfHour(CallbackHelper.GetCustomStartingDate(), forceIncrement);
         Boolean done = false;
         List<String> listOfTimes = new ArrayList<>();
         do{
-             listOfTimes.add((String) android.text.format.DateFormat.format("hh:mm a", runningDate));
-            runningDate = CallbackHelper.RoundToNextQuarterOfHour(runningDate);
+            listOfTimes.add((String) android.text.format.DateFormat.format("hh:mm a", runningDate));
+            runningDate = CallbackHelper.RoundToNextQuarterOfHour(runningDate, forceIncrement);
+            forceIncrement = true;
             if(runningDate.getHours() >= 17){
                 done = true;
             }
