@@ -80,7 +80,7 @@
     <string name="wish_to_cancel_callback">Are you sure you want to cancel your call-back? You will lose your place in the queue.</string>
     <string name="real_yes">Yes</string>
     <string name="real_no">No</string>
-    <string name="server_connection">http://ceclnx01.cec.miamioh.edu:2020/</string>
+    <string name="server_connection">http://ceclnx01.cec.miamioh.edu:2025/</string>
     <string name="server_add_queue_add_id">ADD_QUEUE</string>
     <string name="server_queue_time">QUEUE_TIME</string>
     <string name="server_next_queue_time">NEXT_QUEUE_TIME</string>
@@ -95,6 +95,7 @@
     <string name="callback_not_supported_title">We\'re Sorry</string>
     <string name="callback_not_supported_message">We are having trouble \n connecting you automatically. \n \n Please call \n 1-800-KEY-2-YOU \n directly</string>
     <string name="android_user">AndroidUser1</string>
+    <string name="server_id_string">&amp;id</string>
 
     <integer name="FirstSuggestedTimeHour">9</integer>
     <integer name="FirstSuggestedTimeMinute">00</integer>

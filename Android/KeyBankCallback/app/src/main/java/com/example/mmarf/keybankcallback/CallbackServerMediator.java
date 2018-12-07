@@ -87,7 +87,7 @@ class CallbackServerMediator implements ICallbackServerMediator {
     public Date GetNextAvailableTime(String department){
         Date returnDate;
         mCurrentDepartment = department;
-        String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_next_queue_time));
+        String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_next_queue_time) + mResources.getString(R.string.server_id_string) + mUserID);
         returnDate = ConvertStringToDate(TrimString(response));
         return returnDate;
     }
@@ -115,14 +115,15 @@ class CallbackServerMediator implements ICallbackServerMediator {
 
     public void SetUserToNextAvailableCallback(String department){
         mCurrentDepartment = department;
-        SetCallbackTime(GetNextAvailableTime(department), department);
+        //SetCallbackTime(GetNextAvailableTime(department), department);
+        GetNextAvailableTime(department);
     }
 
     public int GetEstimatedMinutesOfScheduledCallback(String department){
         mCurrentDepartment = department;
         Date queueTime;
         int returnMinutes;
-        String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_callback_time_server_add_id)  + "&id=" + mUserID);
+        String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_callback_time_server_add_id)  + mResources.getString(R.string.server_id_string) + mUserID);
         queueTime = ConvertStringToDate(TrimString(response));
         returnMinutes = CallbackHelper.GetDateDiffInMinutes(queueTime, GetServerTime(department));
         return returnMinutes;
@@ -130,7 +131,7 @@ class CallbackServerMediator implements ICallbackServerMediator {
 
     public void SetCallbackTime(Date date, String department){
         mCurrentDepartment = department;
-        String timeBuilder = "&id=" + mUserID + "&day=" + String.valueOf(date.getDay()) + "&hour=" + String.valueOf(date.getHours()) + "&min=" + String.valueOf(date.getMinutes());
+        String timeBuilder = mResources.getString(R.string.server_id_string) + mUserID + "&day=" + String.valueOf(date.getDay()) + "&hour=" + String.valueOf(date.getHours()) + "&min=" + String.valueOf(date.getMinutes());
         String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_schedule_callback_id_day_hour_minute)+timeBuilder);
         //The first string value is if the time sent in is acceptable. If not, it returns the next available time
         String firstCharacter = response.substring(0,1);
@@ -148,7 +149,7 @@ class CallbackServerMediator implements ICallbackServerMediator {
     }
 
     public Date GetCallbackTime(){
-        String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_callback_time_server_add_id) + "&id=" + mUserID);
+        String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_callback_time_server_add_id) + mResources.getString(R.string.server_id_string) + mUserID);
         //Cannot find user's time
         if(TrimString(response).equals(mCannotFindCallbackTime))
             return null;
@@ -161,7 +162,7 @@ class CallbackServerMediator implements ICallbackServerMediator {
     }
 
     public boolean CancelCallback(){
-        String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_callback_remove_add_id) + "&id=" + mUserID);
+        String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_callback_remove_add_id) + mResources.getString(R.string.server_id_string) + mUserID);
         //0 means removal was successful
         if(Integer.valueOf(TrimString(response)) == 0){
             return true;
@@ -171,7 +172,7 @@ class CallbackServerMediator implements ICallbackServerMediator {
     }
 
     public void AddToDemoQueue(){
-        String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_add_queue_add_id) + "&id=" + mUserID);
+        String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_add_queue_add_id) + mResources.getString(R.string.server_id_string) + mUserID);
     }
 
     private Date ConvertStringToDate(String stringDate){
