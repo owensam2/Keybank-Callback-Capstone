@@ -33,8 +33,9 @@ public class CallbackQuestionsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                //Find out if there is a wait or not. This will determine which screen is chosen next.
-                if(CallbackHelper.GetCallbackServerMediator().GetEstimatedMinutesOfQueue(CallbackHelper.GetDepartmentName(position, CallbackQuestionsActivity.this)) > 0){
+                //Find out if there is a wait or not. This will determine which screen is chosen next. Make sure it's not closed.
+                if(CallbackHelper.GetCallbackServerMediator().GetEstimatedMinutesOfQueue(CallbackHelper.GetDepartmentName(position, CallbackQuestionsActivity.this)) > 0 &&
+                  (CallbackHelper.GetCallbackServerMediator().IsOfficeOpen(CallbackHelper.GetDepartmentName(position, CallbackQuestionsActivity.this)))) {
                     Intent callbackActivity = new Intent(getApplicationContext(), CallbackActivity.class);
                     callbackActivity.putExtra("KeyBank.CallbackActivity.ITEM_INDEX", position);
                     startActivity(callbackActivity);

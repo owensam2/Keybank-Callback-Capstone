@@ -10,10 +10,10 @@ public class CallbackServerMediatorOffline implements ICallbackServerMediator {
     private boolean mOfflineModeCallbackAdded = false;
     private String mCurrentDepartment;
     private Date mCallbackDate;
-    private Resources mResources;
+    private boolean mOfficesOpenOffline = true;
 
     CallbackServerMediatorOffline(Resources resources){
-        mResources = resources;
+        //mResources = resources;
     }
 
     public String GetDepartment(){return mCurrentDepartment;}
@@ -72,6 +72,11 @@ public class CallbackServerMediatorOffline implements ICallbackServerMediator {
         mOfflineModeCallbackAdded = false;
         mCallbackDate = null;
         return true;
+    }
+
+    @Override
+    public boolean IsOfficeOpen(String department) {
+        return mOfficesOpenOffline;
     }
 
 

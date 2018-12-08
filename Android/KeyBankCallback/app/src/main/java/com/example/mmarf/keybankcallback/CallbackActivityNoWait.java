@@ -1,6 +1,7 @@
 package com.example.mmarf.keybankcallback;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -14,6 +15,7 @@ public class CallbackActivityNoWait extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //See if the offices are open.
         setContentView(R.layout.activity_callback_no_wait);
         Button callImmediately = findViewById(R.id.buttonCallImmidatelyNoWait);
         Button scheduleCallback = findViewById(R.id.buttonScheduleCallNoWait);
@@ -22,6 +24,15 @@ public class CallbackActivityNoWait extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mDepartment = CallbackHelper.GetDepartmentName(index, CallbackActivityNoWait.this);
+        TextView noWaitText = findViewById(R.id.textViewNoWaitText);
+        if(CallbackHelper.GetCallbackServerMediator().IsOfficeOpen(mDepartment)){
+            //Set the text appropriately to open offices.
+            noWaitText.setText(getResources().getString(R.string.There_is_currently_no_wait));
+        }
+        else{
+            //Set the text appropriately to closed offices.
+            noWaitText.setText(getResources().getString(R.string.offices_closed_message));
+        }
         SetupUIItems(mDepartment);
 
         callImmediately.setOnClickListener(new View.OnClickListener() {

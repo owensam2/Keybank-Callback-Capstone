@@ -96,6 +96,8 @@
     <string name="callback_not_supported_message">We are having trouble \n connecting you automatically. \n \n Please call \n 1-800-KEY-2-YOU \n directly</string>
     <string name="android_user">AndroidUser1</string>
     <string name="server_id_string">&amp;id</string>
+    <string name="office_open">OFFICE_OPEN</string>
+    <string name="offices_closed_message">We are sorry, the offices are now closed. Please choose the following options for assistance:</string>
 
     <integer name="FirstSuggestedTimeHour">9</integer>
     <integer name="FirstSuggestedTimeMinute">00</integer>

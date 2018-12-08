@@ -14,4 +14,5 @@ public interface ICallbackServerMediator {
     boolean CancelCallback();
     String GetDepartment();
     void AddToDemoQueue();
+    boolean IsOfficeOpen(String department);
 }

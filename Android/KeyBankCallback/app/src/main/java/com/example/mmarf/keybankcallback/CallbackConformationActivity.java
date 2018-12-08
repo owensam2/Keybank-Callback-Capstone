@@ -43,7 +43,7 @@ public class CallbackConformationActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                finish();
+                CallbackHelper.TransferToMainPage(CallbackConformationActivity.this);
                 return true;
         }
         return super.onOptionsItemSelected(item);

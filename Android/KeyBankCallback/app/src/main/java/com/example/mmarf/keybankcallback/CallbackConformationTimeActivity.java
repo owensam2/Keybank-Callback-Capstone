@@ -41,7 +41,8 @@ public class CallbackConformationTimeActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                finish();
+                //Send it back to the main screen. DO NOT GO BACK TO RE-SCHEDULE
+                CallbackHelper.TransferToMainPage(CallbackConformationTimeActivity.this);
                 return true;
         }
         return super.onOptionsItemSelected(item);

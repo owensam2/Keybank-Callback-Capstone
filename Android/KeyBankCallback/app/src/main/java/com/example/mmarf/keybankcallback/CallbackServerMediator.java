@@ -175,6 +175,19 @@ class CallbackServerMediator implements ICallbackServerMediator {
         String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_add_queue_add_id) + mResources.getString(R.string.server_id_string) + mUserID);
     }
 
+    @Override
+    public boolean IsOfficeOpen(String department) {
+        String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.office_open));
+        switch (response){
+            case ("0"):
+                return true;
+            case ("1"):
+                return false;
+            default:
+                return false;
+        }
+    }
+
     private Date ConvertStringToDate(String stringDate){
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(CallbackHelper.GetLocalTimeZone()));
         if(stringDate == null || stringDate.length() == 0){
