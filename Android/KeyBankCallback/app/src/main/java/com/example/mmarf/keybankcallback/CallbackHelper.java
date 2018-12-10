@@ -211,7 +211,7 @@ public class CallbackHelper {
     }
 
     static Date GetNextAvailableTimeForDepartment(String department){
-        return mCallbackServerMediator.GetNextAvailableTime(department);
+        return mCallbackServerMediator.GetNextAvailableQueueTime(department);
     }
 
     private static String FormatSuggestedTimeString(String day, int hour, int minute){

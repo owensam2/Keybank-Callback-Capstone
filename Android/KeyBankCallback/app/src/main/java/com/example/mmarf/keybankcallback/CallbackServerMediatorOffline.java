@@ -68,6 +68,11 @@ public class CallbackServerMediatorOffline implements ICallbackServerMediator {
             return null;
     }
 
+    @Override
+    public Date GetNextAvailableQueueTime(String department) {
+        return GetNextAvailableTime(department);
+    }
+
     public boolean CancelCallback(){
         mOfflineModeCallbackAdded = false;
         mCallbackDate = null;

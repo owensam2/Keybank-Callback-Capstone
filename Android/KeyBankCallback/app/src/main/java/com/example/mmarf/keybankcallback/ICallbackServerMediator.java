@@ -11,6 +11,7 @@ public interface ICallbackServerMediator {
     int GetEstimatedMinutesOfScheduledCallback(String department);
     void SetCallbackTime(Date date, String department);
     Date GetCallbackTime();
+    Date GetNextAvailableQueueTime(String department);
     boolean CancelCallback();
     String GetDepartment();
     void AddToDemoQueue();

@@ -3,6 +3,7 @@ package com.example.mmarf.keybankcallback;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.telecom.Call;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -161,6 +162,15 @@ class CallbackServerMediator implements ICallbackServerMediator {
         }
     }
 
+    @Override
+    public Date GetNextAvailableQueueTime(String department) {
+        Date returnDate;
+        mCurrentDepartment = department;
+        String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_next_available_queue_time));
+        returnDate = ConvertStringToDate(TrimString(response));
+        return returnDate;
+    }
+
     public boolean CancelCallback(){
         String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.server_callback_remove_add_id) + mResources.getString(R.string.server_id_string) + mUserID);
         //0 means removal was successful
@@ -178,7 +188,7 @@ class CallbackServerMediator implements ICallbackServerMediator {
     @Override
     public boolean IsOfficeOpen(String department) {
         String response = SendCommandReceiveResponse(mConnectionURL + mResources.getString(R.string.office_open));
-        switch (response){
+        switch (TrimString(response)){
             case ("0"):
                 return true;
             case ("1"):
@@ -230,7 +240,9 @@ class CallbackServerMediator implements ICallbackServerMediator {
     private class AsyncConnectToServer extends AsyncTask<String,String,String>{
         @Override
         protected String doInBackground(String... strings) {
+            Log.d(strings[0], strings[0]);
             String returnItem = ConnectToServer(strings[0]);
+            Log.d("Finished server", "Fished server");
             return returnItem;
         }
     }
