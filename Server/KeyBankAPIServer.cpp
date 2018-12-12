@@ -5,7 +5,7 @@
  *
  * Copyright 2018 Chris Benton, Andrew Owens
  * 
- * V 1.0 12/11/2018
+ * V 1.1 12/12/2018
  */
 
 #include <ext/stdio_filebuf.h>
@@ -247,7 +247,7 @@ std::string callback(std::string request) {
         validTime = false;
         for (int i = 0; i < callBackVec.size(); i++) {
             if(id == callBackVec[i].id) {
-                return "1 Username Taken";
+                return "1 " + callBackVec[i].time;
             }
             if(time == callBackVec[i].time) {
               if(std::stoi(min) + 5 > 59){
