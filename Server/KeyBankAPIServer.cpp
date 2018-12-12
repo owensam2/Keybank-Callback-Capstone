@@ -5,7 +5,7 @@
  *
  * Copyright 2018 Chris Benton, Andrew Owens
  * 
- * V 0.9 12/2/2018
+ * V 1.0 12/11/2018
  */
 
 #include <ext/stdio_filebuf.h>
@@ -154,7 +154,7 @@ std::string nextQueueTime(std::string id) {
         if(now->tm_hour < openTime) {
         queueTime = std::to_string(now->tm_wday) + " "
                 + std::to_string(openTime) + " 0";
-        day = std::to_string(now->tm_yday);
+        day = std::to_string(now->tm_wday);
         hour = std::to_string(openTime);
         min = "0";
         } else {
@@ -246,11 +246,20 @@ std::string callback(std::string request) {
     while(validTime){
         validTime = false;
         for (int i = 0; i < callBackVec.size(); i++) {
+            if(id == callBackVec[i].id) {
+                return "1 Username Taken";
+            }
             if(time == callBackVec[i].time) {
-                min = std::to_string(std::stoi(min) + 5);
-                time = day + "_" + hour + "_" + min;
-                validTime = true;
-                
+              if(std::stoi(min) + 5 > 59){
+                    min = std::to_string(std::stoi(min) - 55);
+                    hour = std::to_string(std::stoi(hour) + 1);
+                    time = day + "_" + hour + "_" + min;
+                    validTime = true;
+                } else  {
+                    min = std::to_string(std::stoi(min) + 5);
+                    time = day + "_" + hour + "_" + min;
+                    validTime = true;
+                }  
             }
         }
     }
@@ -605,4 +614,3 @@ int main(int argc, char** argv) {
     }
     return 0;
 }
-

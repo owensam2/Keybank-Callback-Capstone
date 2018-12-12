@@ -25,7 +25,7 @@ Full command list:
      *                      be added to the queue
      *      Requires id
      *      Returns '0 D_HH_MM' if successful
-     * "/CALLBACK" - schedule a user to be called back at a specific time
+     * "/CALLBACK" - schedule a user to be called back at a specific time, does not 			allow duplicate usernames
      *      Requires id, day, hour, min
      *      Returns '0 D_HH_MM' if successful
      * "/CALLBACK_TIME" - check the time of a user in the callback queue
